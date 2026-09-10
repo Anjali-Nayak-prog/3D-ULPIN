@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ToastProvider } from './components/common/Toast'
 import { MainLayout } from './components/layout/MainLayout'
+import { LandingPage } from './pages/LandingPage'
 import { Dashboard } from './pages/Dashboard'
 import { CadastralMap } from './pages/CadastralMap'
 import { PropertySearch } from './pages/PropertySearch'
@@ -23,8 +24,9 @@ function App() {
     <BrowserRouter>
       <ToastProvider>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/map" element={<CadastralMap />} />
             <Route path="/properties" element={<PropertySearch />} />
             <Route path="/properties/:id" element={<PropertyDetailsPage />} />
