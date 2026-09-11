@@ -38,7 +38,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     title: 'Main',
     items: [
-      { label: 'Dashboard', to: '/', icon: LayoutDashboard },
+      { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
       { label: '3D Cadastral Map', to: '/map', icon: Map },
       { label: 'Property Search', to: '/properties', icon: Database },
       { label: 'ULPIN Generator', to: '/ulpin-generator', icon: Fingerprint },
