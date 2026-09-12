@@ -1,0 +1,37 @@
+[package]
+name = "ulpin-3d-backend"
+version = "0.1.0"
+edition = "2021"
+description = "3D ULPIN Generation and Vertical Property Mapping System Backend"
+authors = ["3D ULPIN Team"]
+
+[dependencies]
+axum = { version = "0.7", features = ["macros"] }
+tokio = { version = "1.38", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+sqlx = { version = "0.7", default-features = false, features = [
+    "runtime-tokio",
+    "tls-rustls",
+    "postgres",
+    "chrono",
+    "uuid",
+    "json",
+    "migrate"
+] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1.8", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+geo = "0.28"
+geo-types = { version = "0.7", features = ["serde"] }
+anyhow = "1.0"
+thiserror = "1.0"
+reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
+utoipa = { version = "4.2", features = ["chrono", "uuid"] }
+utoipa-swagger-ui = { version = "7.1", features = ["axum"] }
+
+[dev-dependencies]
+tokio-test = "0.4"

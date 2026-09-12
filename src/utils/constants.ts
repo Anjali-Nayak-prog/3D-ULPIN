@@ -186,6 +186,6 @@ export const CHART_COLORS = {
   slate: '#64748b',
 }
 
-export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? '/api'
+export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
-export const DEMO_MODE = true
+export const DEMO_MODE: boolean = import.meta.env.VITE_DEMO_MODE === 'true'
