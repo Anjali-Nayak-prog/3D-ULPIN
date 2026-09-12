@@ -1,21 +1,58 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Card } from '../components/common/Card'
 import { Button } from '../components/common/Button'
 import { EmptyState } from '../components/common/EmptyState'
+import { SkeletonCard } from '../components/common/Loading'
 import { PropertyDetails } from '../components/property/PropertyDetails'
 import { Property3DPreview } from '../components/property/Property3DPreview'
 import { SpatialInfo } from '../components/property/SpatialInfo'
 import { OwnershipPanel } from '../components/property/OwnershipPanel'
 import { DataProvenance } from '../components/property/DataProvenance'
-import { getPropertyById } from '../data/propertiesData'
+import { getPropertyById } from '../services/propertyService'
+import type { Property } from '../types/property'
 
 export function PropertyDetailsPage() {
   const { id } = useParams<string>()
   const navigate = useNavigate()
-  const property = useMemo(() => (id ? getPropertyById(id) : undefined), [id])
+  const [property, setProperty] = useState<Property | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let mounted = true
+    if (!id) {
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    getPropertyById(id)
+      .then((p) => {
+        if (mounted) {
+          setProperty(p)
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          setProperty(null)
+          setLoading(false)
+        }
+      })
+    return () => {
+      mounted = false
+    }
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="space-y-5">
+        <PageHeader title="Property Details" subtitle="Loading registered vertical property…" />
+        <SkeletonCard rows={8} />
+      </div>
+    )
+  }
 
   if (!property) {
     return (

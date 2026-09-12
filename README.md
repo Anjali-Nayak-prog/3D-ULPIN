@@ -1,134 +1,212 @@
-# 3D ULPIN — Vertical Property Mapping System
+# 3D ULPIN Generation & Vertical Property Mapping System
 
-React + TypeScript frontend for issuing **volumetric ULPINs** (Unique Land Parcel Identification Numbers) that map property volumes across 2D, 3D and underground space, and for resolving vertical ownership conflicts in a modern cadastral register.
+A full-stack 3D cadastral property management and volumetric ULPIN issuance system. Extends traditional 2D land parcel cadastres into the 3D domain ($X + Y + Z$) to represent buildings, floors, apartments, and underground infrastructure assets with high-precision topology validation and conflict detection.
 
-> **Note:** This is the demo build. It ships with realistic mock data behind an Axios service layer so it runs standalone — see [Architecture & Data Layer](#architecture--data-layer) for how to connect a live backend.
+---
 
-## Features
+## Architecture Overview
 
-### Dashboard
-- KPI stat cards (parcels, 3D volumes, buildings, units, underground assets, conflicts)
-- Isometric 3D city overview rendered in pure SVG
-- Recharts analytics (distribution, height bands, vertical growth trend, underground assets)
-- Recent activity, alerts, quick actions and live system status
+```
+Frontend (React 19 + TypeScript + Vite)
+    │
+    │ HTTP / JSON (Axios, Base URL: http://localhost:8080)
+    ▼
+Rust Axum Backend (Port 8080)
+    ├── Map & Layer Service
+    ├── 3D Property & Parcel Service
+    ├── Prototype 3D ULPIN Generator (e.g., 3D-MH-PN-P001-B01-F04-A01)
+    ├── 10-Point 3D Cadastral & Topology Validation Engine
+    ├── 2D Footprint to 3D Volumetric Extrusion Service
+    ├── OpenAPI / Swagger UI (/swagger-ui/)
+    │
+    ├── PostgreSQL 16 + PostGIS 3.4 (Port 5432)
+    │     ├── parcels, buildings, floors, properties
+    │     ├── underground_assets, conflicts, validation_reports
+    │     └── spatial indexes (GIST)
+    │
+    └── Python AI Service (FastAPI, Port 8000)
+          ├── Building Footprint Extraction (/ai/building/extract)
+          ├── Vertical Floor Segmentation (/ai/floor/segment)
+          └── LiDAR Point Cloud Filtering (/ai/pointcloud/process)
+```
 
-### Cadastral Map
-- Interactive 2D / 3D isometric views of the vertical property graph
-- Pan, zoom and measurement tools (distance / area / height)
-- Toggleable layers with per-layer opacity
-- Underground utilities, metro tunnels and underpasses
-- Per-building floor volume inspection and status popups
+---
 
-### Property Search & Details
-- Filtered search across ULPIN, owner, district, type, floors and dates
-- Grid / list result views
-- Detail page with 3D volume preview, spatial envelope, ownership and data-provenance panels
+## ULPIN Format & Hierarchy
 
-### 3D ULPIN Generator
-- Five-step wizard: Location → Property Type → Vertical Extent → Geometry → Issuance
-- Live vertical-envelope preview
-- Geometric-hash issuance with neighboring-volume checks and conflict gating
+> [!NOTE]
+> Official government **ULPIN** (Unique Land Parcel Identification Number) represents the 2D parent parcel boundary (e.g., `ULPIN-PN-2026-001245`).
+> This system generates prototype child 3D volumetric identities without modifying official 2D parcel definitions:
+>
+> **Prototype Format:** `3D-{State}-{District}-{Parcel}-{Building}-{Floor}-{Apartment}`
+> **Example:** `3D-MH-PN-P001-B01-F04-A01`
+> - Parent Parcel: `P001` (`ULPIN-PN-000123`)
+> - Building: `B01` (`Skyline Tower A`)
+> - Floor: `F04` (`Floor 04`, $Z \in [12\text{m}, 15\text{m}]$)
+> - Apartment: `A01` (Flat 401, $V = 450\text{ m}^3$)
+>
+> 3D geometry coordinates are stored separately in PostGIS.
 
-### AI Processing
-- Automated building extraction and floor segmentation visualizations
-- End-to-end processing pipeline timeline (data input → ULPIN generation)
+---
 
-### Validation & Conflicts
-- Topology status (horizontal / vertical / boundary / utility / ownership checks)
-- Conflict cards with resolve/ignore workflows and validation report runs
+## API Endpoints Catalog
 
-### Administration
-- Reports (PDF / CSV / XLSX / GeoJSON), notifications, user management
-- Fine-grained roles & permissions matrix, immutable audit logs, system settings
+### Map & Spatial Visualization
+| Method | Endpoint | Description | Response Model |
+| --- | --- | --- | --- |
+| `GET` | `/health` | Health check & database connection status | `{ status, version, database }` |
+| `GET` | `/map/layers` | Cadastral map layer visibility & opacity metadata | `MapLayer[]` |
+| `GET` | `/map/buildings` | Landmark & grid buildings with heights and floors | `MapBuilding[]` |
+| `GET` | `/map/underground` | Underground utilities (water, sewer, metro, power) | `UndergroundAsset[]` |
+| `GET` | `/map/dem` | Digital Elevation Model grid tile | `number[]` |
 
-## Tech Stack
+### Property Management
+| Method | Endpoint | Description | Parameters / Body | Response Model |
+| --- | --- | --- | --- | --- |
+| `GET` | `/properties` | Query & filter volumetric properties | `query, type, status, district, minHeight, maxHeight, maxFloors` | `Property[]` |
+| `GET` | `/properties/{id}` | Retrieve property by internal ID | `id` in path | `Property` |
+| `GET` | `/properties/ulpin/{ulpin}` | Retrieve property by ULPIN / 3D ID | `ulpin` in path | `Property` |
+| `PATCH` | `/properties/{id}` | Update property verification status | `{ status: string }` | `Property` |
 
-| Layer | Choice |
-| --- | --- |
-| UI | React 19 |
-| Language | TypeScript (strict) |
-| Build tooling | Vite 8 |
-| Styling | Tailwind CSS v4 (`@theme` tokens) |
-| Routing | React Router v7 |
-| Charts | Recharts 3 |
-| Icons | lucide-react |
-| HTTP | Axios |
-| Utilities | clsx |
+### 3D ULPIN Issuance
+| Method | Endpoint | Description | Body | Response Model |
+| --- | --- | --- | --- | --- |
+| `POST` | `/ulpin/generate` | Generate & persist volumetric 3D ULPIN | `ULPINGenerationRequest` | `ULPINResult` |
+| `GET` | `/ulpin/validate/{ulpin}` | Validate official or prototype ULPIN | `ulpin` in path | `boolean` |
+| `GET` | `/ulpin/recent` | List recently generated ULPINs | `limit?: number` | `RecentULPIN[]` |
 
-## Getting Started
+### 3D Validation Engine & Conflicts
+| Method | Endpoint | Description | Parameters / Body | Response Model |
+| --- | --- | --- | --- | --- |
+| `GET` | `/validation/conflicts` | List cadastral conflicts | `severity, status, type, dateFrom, dateTo` | `Conflict[]` |
+| `PATCH` | `/validation/conflicts/{id}` | Update conflict status (`resolved`, `ignored`) | `{ status: string }` | `Conflict` |
+| `GET` | `/validation/reports` | List historical validation reports | — | `ValidationReport[]` |
+| `POST` | `/validation/validate` | Run 10-point topology check on property | `{ propertyId: string }` | `ValidationReport` |
 
-**Prerequisites:** Node.js 20+ and npm.
+### Python AI Processing Service (Port 8000)
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/health` | AI service health check |
+| `POST` | `/ai/building/extract` | Extract rooftop footprints from aerial surveys |
+| `POST` | `/ai/floor/segment` | Estimate floor counts, elevations & vertical slices |
+| `POST` | `/ai/pointcloud/process` | LiDAR ground, rooftop, and facade classification |
+
+---
+
+## 10-Point 3D Validation Engine
+
+The backend validation engine checks each 3D property against 10 rigorous cadastral rules:
+1. **Parcel Containment**: Verifies horizontal footprint does not breach land parcel boundaries.
+2. **Building Centroid Inside Parcel**: Confirms building centroid lies within surveyed parcel coordinates.
+3. **Floor Vertical Range Validation**: Enforces $z_{\min} < z_{\max}$, positive non-zero heights.
+4. **Apartment Floor-Plane Containment**: Validates apartment unit is assigned to a valid level within building floor heights.
+5. **3D Volumetric Overlap Detection**: Detects volumetric collisions against adjoining property envelopes.
+6. **Vertical Airspace Encroachment**: Detects cantilevers and terraces protruding into neighboring air rights.
+7. **Outside-Parcel Intrusion**: Checks if ancillary structures exceed statutory setbacks or road reservations.
+8. **Underground Utility Setback Validation**: Validates substructure depth against sewer, water, and power trunk line buffers.
+9. **Geometry & Mesh Topology Integrity**: Validates manifold geometry and coordinate ordering.
+10. **Parent Cadastral ULPIN Linkage**: Confirms 3D unit links to an authentic parent land parcel record.
+
+---
+
+## Quick Start Guide
+
+### Option 1: Run with Docker Compose (Recommended for Full Stack)
 
 ```bash
+# Start PostgreSQL/PostGIS, Rust Backend, and Python AI Service
+docker-compose up --build -d
+
+# Check status
+docker-compose ps
+
+# Run Frontend
 npm install
-npm run dev        # start the Vite dev server -> http://localhost:5173
+npm run dev
 ```
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the development server with HMR |
-| `npm run build` | Type-check (`tsc -b`) then production build via Vite |
-| `npm run lint` | Run ESLint |
-| `npm run preview` | Serve the production build locally |
+The stack will be available at:
+- **Frontend UI**: http://localhost:5173
+- **Rust Backend API**: http://localhost:8080
+- **Swagger / OpenAPI Documentation**: http://localhost:8080/swagger-ui/
+- **Python AI Service**: http://localhost:8000
+- **PostgreSQL / PostGIS**: localhost:5432 (`ulpin_db`)
 
-## Architecture & Data Layer
+---
 
-The app is **demo-mode by default**: every service call funnels through a single pattern so the UI never knows whether it is talking to a network or a mock.
+### Option 2: Native Local Execution
 
-- `src/services/api.ts` — configured Axios instance (adds `Authorization` header from `localStorage`, clears it on `401`).
-- `apiOrMock(request, mockFn)` — if `DEMO_MODE` is on, resolves `mockFn()` after a simulated 450 ms latency; otherwise performs the real HTTP request.
-- Mock datasets live in `src/data/` and services in `src/services/` (property, ulpin, map, validation).
+#### 1. Backend Server
+```bash
+# To run with Rust / Cargo:
+cd backend
+cargo run
 
-### Connecting a real backend
-
-1. Set `DEMO_MODE = false` in `src/utils/constants.ts`.
-2. Point the client at your API with the `VITE_API_BASE_URL` environment variable (defaults to `/api`).
-3. That's it — no component-level changes required.
-
-## Project Structure
-
-```
-src/
-├── components/
-│   ├── ai/          # AI processing cards, floor segmentation, pipeline timeline
-│   ├── common/      # Button, Card, Badge, Modal, Toast, EmptyState, Loading, SearchInput
-│   ├── dashboard/   # KPI cards, city overview, charts, activity, alerts
-│   ├── layout/      # Sidebar, Header, MainLayout, PageHeader
-│   ├── map/         # MapViewer, controls, layer panel, floor selector, popups
-│   ├── property/    # Cards, search filters, 3D preview, details, ownership, provenance
-│   ├── ulpin/       # 5-step generation wizard
-│   └── validation/  # Conflict cards, validation results, topology status
-├── data/            # Mock datasets (properties, dashboard, analytics, map, validation)
-├── hooks/           # useProperties, useDashboard, useMap
-├── pages/           # One module per route
-├── services/        # Axios + domain services with apiOrMock
-├── types/           # Domain models
-└── utils/           # formatters, constants, helpers, isometric projection
+# Alternatively, run with the included Python dev server runner (native Windows fallback):
+python backend/dev_server.py
 ```
 
-## Routes
+#### 2. Python AI Service
+```bash
+cd ai-service
+pip install -r requirements.txt
+uvicorn app.main:app --port 8000
+```
 
-| Path | Page |
-| --- | --- |
-| `/` | Dashboard |
-| `/map` | Cadastral Map |
-| `/properties` | Property Search |
-| `/properties/:id` | Property Details |
-| `/ulpin-generator` | ULPIN Generator |
-| `/data-management` | Data Management |
-| `/ai-processing` | AI Processing |
-| `/validation` | Validation & Conflicts |
-| `/analytics` | Analytics |
-| `/reports` | Reports |
-| `/notifications` | Notifications |
-| `/users` | User Management |
-| `/roles` | Roles & Permissions |
-| `/settings` | System Settings |
-| `/audit-logs` | Audit Logs |
-| `*` | 404 |
+#### 3. Frontend
+```bash
+npm install
+npm run dev
+```
 
-## Development Notes
+---
 
-- **Strict TypeScript**: `verbatimModuleSyntax` requires `import type` for type-only imports; no TS enums (`erasableSyntaxOnly`); `noUnusedLocals` / `noUnusedParameters` are enforced.
-- **Design system**: Tailwind v4 theme defined in `src/index.css` via `@theme`. Status semantics: verified = emerald, pending = amber, conflict = red, AI = purple. Dark navy cadastral palette.
-- **Mock 3D rendering**: isometric building boxes are computed with `src/utils/isometric.ts` (`isoProject`, `isoBoxGeometry`, `shadeHex`).
+## Switching Frontend Between Demo and Live Mode
+
+The frontend supports seamless switching between local demo mocks and the live full-stack backend via environment variables:
+
+### To run in Live Mode (calling the real backend):
+In `.env` or `.env.development`:
+```ini
+VITE_API_BASE_URL=http://localhost:8080
+VITE_DEMO_MODE=false
+```
+When `VITE_DEMO_MODE=false`, all UI interactions (Property Search, Detail Views, ULPIN Generation, Cadastral Map, Conflict Resolution) execute real HTTP requests against the backend.
+
+### To switch back to Demo Mode:
+```ini
+VITE_DEMO_MODE=true
+```
+In Demo Mode, mock datasets in `src/data/` are used with simulated network latency.
+
+---
+
+## Database Schema & Migrations
+
+Migrations are stored in `backend/migrations/`:
+- `0001_initial_schema.sql`: Tables for `parcels`, `buildings`, `floors`, `properties`, `underground_assets`, `conflicts`, `validation_reports`, `audit_logs`, and PostGIS spatial indexes (`GIST`).
+- `0002_seed_data.sql`: Pune demonstration area seeded with Parcel `P001`, Building `B01`, Floor 4, Flat 401 (`3D-MH-PN-P001-B01-F04-A01`), Azure Residency conflict (`cnf-001`), and underground sewer setback conflict (`cnf-004`).
+
+---
+
+## Running Automated Tests
+
+```bash
+# Run Rust unit tests (geometry math, ULPIN generation, validation engine, property service):
+cd backend
+cargo test
+
+# Run frontend production build validation:
+npm run build
+```
+
+---
+
+## Git Workflow & Pull Request
+
+All backend implementation has been performed strictly on the `backend` branch branched off `main`:
+```bash
+git branch --show-current
+# Output: backend
+```
+The branch is clean, tested, and ready for Pull Request review and merge into `main`.
