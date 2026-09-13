@@ -42,6 +42,8 @@ export interface MapBuilding {
   width: number
   depth: number
   district: string
+  /** Canonical property record this building volume belongs to (single shared world). */
+  propertyId?: string
 }
 
 export interface UndergroundAsset {
@@ -51,6 +53,8 @@ export interface UndergroundAsset {
   depth: number
   status: PropertyStatus
   path: { x: number; z: number }[]
+  /** Canonical property record this subsurface asset belongs to (single shared world). */
+  propertyId?: string
 }
 
 export interface MapLocation {

@@ -9,6 +9,7 @@ import type { Conflict } from '../../types/validation'
 
 interface ValidationResultsProps {
   conflicts: Conflict[]
+  onView: (conflict: Conflict) => void
   onResolve: (id: string) => void
   onIgnore: (id: string) => void
 }
@@ -16,7 +17,7 @@ interface ValidationResultsProps {
 type SeverityFilter = 'all' | Conflict['severity']
 type StatusFilter = 'all' | ConflictStatus
 
-export function ValidationResults({ conflicts, onResolve, onIgnore }: ValidationResultsProps) {
+export function ValidationResults({ conflicts, onView, onResolve, onIgnore }: ValidationResultsProps) {
   const [severity, setSeverity] = useState<SeverityFilter>('all')
   const [status, setStatus] = useState<StatusFilter>('all')
 
@@ -41,26 +42,26 @@ export function ValidationResults({ conflicts, onResolve, onIgnore }: Validation
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatTile
-          icon={<XCircle size={17} className="text-red-400" />}
+          icon={<XCircle size={17} className="text-red-600" />}
           label="Open Conflicts"
           value={String(stats.open)}
-          tone="text-white"
+          tone="text-slate-900"
         />
         <StatTile
-          icon={<Clock size={17} className="text-amber-400" />}
+          icon={<Clock size={17} className="text-amber-600" />}
           label="Resolved"
           value={String(stats.resolved)}
-          tone="text-white"
+          tone="text-slate-900"
         />
         <StatTile
-          icon={<CheckCircle2 size={17} className="text-red-400" />}
+          icon={<CheckCircle2 size={17} className="text-red-600" />}
           label="Critical"
           value={String(stats.critical)}
-          tone="text-white"
+          tone="text-slate-900"
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-white/[0.07] bg-navy-900/70 px-3 py-2.5">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-navy-900/70 px-3 py-2.5">
         <Filter size={14} className="text-slate-500" />
         <FilterChip
           label="All severities"
@@ -75,7 +76,7 @@ export function ValidationResults({ conflicts, onResolve, onIgnore }: Validation
             onClick={() => setSeverity(severity === key ? 'all' : key as SeverityFilter)}
           />
         ))}
-        <span className="mx-1 h-4 w-px bg-white/[0.08]" />
+        <span className="mx-1 h-4 w-px bg-slate-200" />
         <FilterChip
           label="All statuses"
           active={status === 'all'}
@@ -93,7 +94,7 @@ export function ValidationResults({ conflicts, onResolve, onIgnore }: Validation
 
       <div className="mb-1 flex items-center justify-between">
         <p className="text-xs text-slate-500">
-          Showing <span className="font-semibold text-slate-300">{filtered.length}</span> of{' '}
+          Showing <span className="font-semibold text-slate-600">{filtered.length}</span> of{' '}
           {conflicts.length} conflicts
         </p>
         <span className="text-[11px] text-slate-600">
@@ -102,7 +103,7 @@ export function ValidationResults({ conflicts, onResolve, onIgnore }: Validation
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-white/[0.06] bg-navy-900/50">
+        <div className="rounded-xl border border-slate-200 bg-navy-900/50">
           <EmptyState
             title="No conflicts match the filter"
             description="Adjust the severity or status filters to widen the result set."
@@ -114,6 +115,7 @@ export function ValidationResults({ conflicts, onResolve, onIgnore }: Validation
             <ConflictCard
               key={conflict.id}
               conflict={conflict}
+              onView={onView}
               onResolve={onResolve}
               onIgnore={onIgnore}
             />
@@ -139,8 +141,8 @@ function FilterChip({
       className={cn(
         'rounded-full border px-2.5 py-1 text-[11px] font-medium transition-all duration-150',
         active
-          ? 'border-primary-400/50 bg-primary-500/15 text-primary-300'
-          : 'border-white/[0.07] text-slate-500 hover:text-slate-300',
+          ? 'border-primary-400/50 bg-primary-500/15 text-primary-600'
+          : 'border-slate-200 text-slate-500 hover:text-slate-600',
       )}
     >
       {label}
@@ -160,7 +162,7 @@ function StatTile({
   tone: string
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-white/[0.07] bg-navy-900/70 px-4 py-3.5">
+    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-navy-900/70 px-4 py-3.5">
       {icon}
       <div>
         <p className={cn('text-xl font-bold', tone)}>{value}</p>

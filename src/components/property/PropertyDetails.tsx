@@ -26,7 +26,7 @@ const statusLabelMap: Record<string, string> = {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="mb-3 flex items-center gap-2 text-sm font-bold tracking-wide text-white">
+    <h3 className="mb-3 flex items-center gap-2 text-sm font-bold tracking-wide text-slate-900">
       {children}
     </h3>
   )
@@ -40,9 +40,9 @@ interface FieldRowProps {
 
 function FieldRow({ label, value, mono = false }: FieldRowProps) {
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-white/[0.04] py-2.5 last:border-0">
+    <div className="flex items-center justify-between gap-3 border-b border-slate-200 py-2.5 last:border-0">
       <span className="text-xs text-slate-500">{label}</span>
-      <span className={`text-right text-xs font-medium text-slate-200 ${mono ? 'font-mono' : ''}`}>
+      <span className={`text-right text-xs font-medium text-slate-700 ${mono ? 'font-mono' : ''}`}>
         {value}
       </span>
     </div>
@@ -57,13 +57,13 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
   return (
     <div className="space-y-5">
       {/* Header status strip */}
-      <div className="flex flex-col gap-4 rounded-xl border border-white/[0.07] bg-navy-900/70 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-navy-900/70 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-500/15">
-            <Building2 size={22} className="text-primary-400" />
+            <Building2 size={22} className="text-primary-600" />
           </span>
           <div>
-            <h2 className="text-lg font-bold text-white">{property.name}</h2>
+            <h2 className="text-lg font-bold text-slate-900">{property.name}</h2>
             <p className="mt-0.5 flex items-center gap-2 text-xs text-slate-500">
               <MapPin size={12} />
               {property.address}
@@ -82,7 +82,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
         <div className="space-y-5 xl:col-span-2">
           <Card>
             <SectionLabel>
-              <Ruler size={15} className="text-primary-400" />
+              <Ruler size={15} className="text-primary-600" />
               Property Information
             </SectionLabel>
             <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -96,7 +96,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
               <FieldRow label="Registered" value={formatDateShort(property.createdAt)} />
             </div>
             {property.description && (
-              <p className="mt-4 rounded-lg border border-white/[0.05] bg-white/[0.02] px-4 py-3 text-xs leading-5 text-slate-400">
+              <p className="mt-4 rounded-lg border border-slate-200 bg-slate-100/50 px-4 py-3 text-xs leading-5 text-slate-500">
                 {property.description}
               </p>
             )}
@@ -105,7 +105,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
           {property.building && (
             <Card>
               <SectionLabel>
-                <Layers3 size={15} className="text-cyan-400" />
+                <Layers3 size={15} className="text-cyan-600" />
                 Building Information
               </SectionLabel>
               <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -122,7 +122,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
           {property.apartment && (
             <Card>
               <SectionLabel>
-                <Building2 size={15} className="text-sky-400" />
+                <Building2 size={15} className="text-sky-600" />
                 Apartment Information
               </SectionLabel>
               <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -137,7 +137,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
           {property.underground && (
             <Card>
               <SectionLabel>
-                <ArrowUpDown size={15} className="text-purple-400" />
+                <ArrowUpDown size={15} className="text-purple-600" />
                 Underground Asset Information
               </SectionLabel>
               <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -158,7 +158,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
 
           <Card>
             <SectionLabel>
-              <Trees size={15} className="text-emerald-400" />
+              <Trees size={15} className="text-emerald-600" />
               Land Information
             </SectionLabel>
             <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
@@ -178,7 +178,7 @@ export function PropertyDetails({ property }: PropertyDetailsProps) {
 
         <div className="space-y-5">
           <Card className={cn('overflow-hidden')}>
-            <h3 className="px-5 pt-5 text-sm font-bold tracking-wide text-white">
+            <h3 className="px-5 pt-5 text-sm font-bold tracking-wide text-slate-900">
               3D Preview
             </h3>
             <p className="px-5 pb-3 text-xs text-slate-500">

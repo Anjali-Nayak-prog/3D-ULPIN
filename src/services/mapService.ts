@@ -1,4 +1,4 @@
-import { generateCityBuildings, mapLayers, undergroundAssets } from '../data/mapData'
+import { cadastralBlockBuildings, mapLayers, undergroundAssets } from '../data/mapData'
 import type {
   MapBuilding,
   MapLayer,
@@ -17,7 +17,7 @@ export async function getMapLayers(): Promise<MapLayer[]> {
 }
 
 export async function getMapBuildings(): Promise<MapBuilding[]> {
-  return apiOrMock(api.get('/map/buildings'), () => generateCityBuildings())
+  return apiOrMock(api.get('/map/buildings'), () => cadastralBlockBuildings)
 }
 
 export async function getUndergroundAssets(): Promise<UndergroundAsset[]> {

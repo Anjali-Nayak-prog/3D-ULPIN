@@ -4,6 +4,11 @@ import type {
   UndergroundAsset,
 } from '../types/map'
 import type { PropertyStatus } from '../types/property'
+import {
+  cadastralBuildings,
+  cadastralUnderground,
+  undergroundAssets,
+} from './spatialData'
 
 export const mapLayers: MapLayer[] = [
   { id: 'lyr-parcels', name: 'Land Parcels', type: 'parcels', category: 'surface', visible: true, opacity: 0.55, color: '#38bdf8' },
@@ -68,6 +73,7 @@ export const landmarkBuildings: MapBuilding[] = [
     id: 'landmark-1',
     name: 'Skyline Tower A',
     ulpin: 'ULPIN-PN-2026-001245',
+    propertyId: 'prp-001',
     propertyType: 'building',
     status: 'verified',
     floors: 24,
@@ -83,6 +89,7 @@ export const landmarkBuildings: MapBuilding[] = [
     id: 'landmark-2',
     name: 'Baner Commercial Tower B',
     ulpin: 'ULPIN-PN-2026-000954',
+    propertyId: 'prp-007',
     propertyType: 'building',
     status: 'verified',
     floors: 21,
@@ -98,6 +105,7 @@ export const landmarkBuildings: MapBuilding[] = [
     id: 'landmark-3',
     name: 'GreenValley Ph-3 Tower B',
     ulpin: 'ULPIN-PN-2026-001301',
+    propertyId: 'prp-005',
     propertyType: 'building',
     status: 'new',
     floors: 18,
@@ -113,6 +121,7 @@ export const landmarkBuildings: MapBuilding[] = [
     id: 'landmark-4',
     name: 'Azure Residency Tower',
     ulpin: 'ULPIN-PN-2026-000866',
+    propertyId: 'prp-010',
     propertyType: 'building',
     status: 'verified',
     floors: 14,
@@ -128,6 +137,7 @@ export const landmarkBuildings: MapBuilding[] = [
     id: 'landmark-5',
     name: 'Innovation Hub Block-6',
     ulpin: 'ULPIN-PN-2026-001002',
+    propertyId: 'prp-012',
     propertyType: 'building',
     status: 'verified',
     floors: 6,
@@ -141,55 +151,24 @@ export const landmarkBuildings: MapBuilding[] = [
   },
 ]
 
-export const undergroundAssets: UndergroundAsset[] = [
-  {
-    id: 'ug-1',
-    name: 'Trunk Water Main H-18',
-    kind: 'water',
-    depth: 6.5,
-    status: 'verified',
-    path: [{ x: 0, z: 1.5 }, { x: 3, z: 1.5 }, { x: 6, z: 2.8 }, { x: 9, z: 2.8 }, { x: 12, z: 4 }, { x: 14, z: 4 }],
-  },
-  {
-    id: 'ug-2',
-    name: 'Metro Tunnel Segment T-12',
-    kind: 'metro',
-    depth: 32,
-    status: 'verified',
-    path: [{ x: 1, z: -0.5 }, { x: 4, z: 1 }, { x: 7, z: 2.5 }, { x: 10, z: 4 }, { x: 14, z: 5.5 }],
-  },
-  {
-    id: 'ug-3',
-    name: 'Sewer Trunk SN-88',
-    kind: 'sewer',
-    depth: 11,
-    status: 'conflict',
-    path: [{ x: 0.5, z: 6 }, { x: 3.5, z: 6.5 }, { x: 7, z: 7 }, { x: 10, z: 8.2 }, { x: 14, z: 9 }],
-  },
-  {
-    id: 'ug-4',
-    name: 'HT Power Cable Corridor',
-    kind: 'power',
-    depth: 9,
-    status: 'verified',
-    path: [{ x: 2, z: 0 }, { x: 2, z: 3 }, { x: 2, z: 6 }, { x: 2, z: 9 }],
-  },
-  {
-    id: 'ug-5',
-    name: 'Basement Parking P-3',
-    kind: 'parking',
-    depth: 6,
-    status: 'pending',
-    path: [{ x: 10, z: 7 }, { x: 11.2, z: 7.6 }, { x: 12.4, z: 7.6 }, { x: 13.6, z: 8.4 }],
-  },
-  {
-    id: 'ug-6',
-    name: 'Telecom Duct Bank',
-    kind: 'telecom',
-    depth: 3.2,
-    status: 'verified',
-    path: [{ x: 12, z: 0.5 }, { x: 13, z: 2.2 }, { x: 14, z: 4 }, { x: 14.4, z: 6 }],
-  },
-]
+export { undergroundAssets }
 
 export const cityExtent = { minX: -0.5, maxX: 14.5, minZ: -0.5, maxZ: 10.5 }
+
+export interface CadastralBlock {
+  buildings: MapBuilding[]
+  underground: UndergroundAsset[]
+}
+
+export const SELECTED_PROPERTY_ULPIN = 'IND-PN-1024-V07-8F3A21'
+
+export const cadastralBlockBuildings: MapBuilding[] = cadastralBuildings
+
+export const cadastralBlockUnderground: UndergroundAsset[] = cadastralUnderground
+
+export function getCadastralBlock(): CadastralBlock {
+  return {
+    buildings: cadastralBlockBuildings,
+    underground: cadastralBlockUnderground,
+  }
+}

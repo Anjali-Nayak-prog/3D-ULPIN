@@ -19,10 +19,10 @@ export function SkeletonCard({ rows = 4, title = true }: SkeletonRowProps) {
     <Card className="animate-pulse">
       <div className="space-y-4">
         {title && (
-          <div className="h-4 w-1/3 rounded bg-white/[0.06]" />
+          <div className="h-4 w-1/3 rounded bg-slate-200/60" />
         )}
         {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className="h-3 w-full rounded bg-white/[0.06]" style={{ width: `${100 - i * 12}%` }} />
+          <div key={i} className="h-3 w-full rounded bg-slate-200/60" style={{ width: `${100 - i * 12}%` }} />
         ))}
       </div>
     </Card>

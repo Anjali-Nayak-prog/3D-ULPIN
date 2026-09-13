@@ -14,17 +14,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'bg-primary-500 text-white hover:bg-primary-400 focus-visible:ring-primary-400/50 shadow-glow-sm',
+    'bg-primary-500 text-white hover:bg-primary-600 focus-visible:ring-primary-400/50 shadow-glow-sm',
   secondary:
-    'bg-navy-700 text-slate-200 hover:bg-navy-600 focus-visible:ring-primary-400/40',
+    'bg-navy-700 text-slate-700 hover:bg-navy-600 focus-visible:ring-primary-400/40',
   ghost:
-    'bg-transparent text-slate-300 hover:bg-white/5 hover:text-white focus-visible:ring-white/20',
+    'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-slate-300',
   outline:
-    'border border-white/10 bg-transparent text-slate-200 hover:border-primary-400/50 hover:text-white focus-visible:ring-primary-400/40',
+    'border border-slate-200 bg-transparent text-slate-700 hover:border-primary-400/50 hover:text-slate-900 focus-visible:ring-primary-400/40',
   danger:
-    'bg-danger-500 text-white hover:bg-danger-400 focus-visible:ring-danger-400/50',
+    'bg-danger-500 text-white hover:bg-danger-600 focus-visible:ring-danger-400/50',
   success:
-    'bg-success-500 text-white hover:bg-success-400 focus-visible:ring-success-400/50',
+    'bg-success-500 text-white hover:bg-success-600 focus-visible:ring-success-400/50',
 }
 
 const sizeClasses: Record<Size, string> = {

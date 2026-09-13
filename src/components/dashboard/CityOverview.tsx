@@ -1,85 +1,60 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type ComponentType,
-  type ReactNode,
-  type Ref,
-} from 'react'
+import { useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Boxes,
   CheckCircle2,
   Eye,
   Home,
-  Layers,
-  Locate,
   Map as MapIcon,
-  Settings2,
+  RotateCw,
   Square,
   ZoomIn,
   ZoomOut,
 } from 'lucide-react'
-import { generateCityBuildings } from '../../data/mapData'
-import type { MapBuilding } from '../../types/map'
-import { statusSummary } from '../../data/dashboardData'
+import { cadastralBlockBuildings, cadastralBlockUnderground } from '../../data/mapData'
 import { Card } from '../common/Card'
 import { cn } from '../../utils/helpers'
-import { STATUS_COLORS } from '../../utils/constants'
-import { useToast } from '../common/Toast'
-import type { PropertyStatus } from '../../types/property'
-import type { CitySceneHandle } from './CityScene3D'
+import { CadastralScene, type CadastralSceneHandle } from '../cadastral/CadastralScene'
 
-const badgeFor: Record<PropertyStatus, { label: string; hex: string }> = {
-  verified: { label: 'Verified', hex: STATUS_COLORS.verified.hex },
-  pending: { label: 'Pending', hex: STATUS_COLORS.pending.hex },
-  conflict: { label: 'Conflict', hex: STATUS_COLORS.conflict.hex },
-  new: { label: 'New', hex: STATUS_COLORS.new.hex },
-}
+const badgeFor = [
+  { key: 'verified', label: 'Verified property', hex: '#10b981', tone: 'text-emerald-600' },
+  { key: 'pending', label: 'Pending validation', hex: '#f59e0b', tone: 'text-amber-600' },
+  { key: 'conflict', label: 'Spatial conflict', hex: '#ef4444', tone: 'text-red-600' },
+  { key: 'new', label: 'New property', hex: '#38bdf8', tone: 'text-sky-600' },
+] as const
 
-export function CityOverview() {
+export function CityOverview({
+  selectedId = null,
+  onSelect,
+}: {
+  selectedId?: string | null
+  onSelect?: (id: string | null) => void
+} = {}) {
   const navigate = useNavigate()
-  const toast = useToast()
-  const [buildings] = useState<MapBuilding[]>(() => generateCityBuildings())
-  const [SceneComp, setSceneComp] = useState<ComponentType<{
-    buildings: MapBuilding[]
-    selectedId: string | null
-    showLabels: boolean
-    measureMode: boolean
-    onSelect: (id: string | null) => void
-    onMeasure: (building: MapBuilding) => void
-    ref?: Ref<CitySceneHandle>
-  }> | null>(null)
-  const [showLabels, setShowLabels] = useState(true)
-  const [measureMode, setMeasureMode] = useState(false)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const sceneRef = useRef<CadastralSceneHandle>(null)
 
-  // Lazily load the Three.js scene so the WebGL chunk only loads with this card.
-  useEffect(() => {
-    let active = true
-    void import('./CityScene3D').then((mod) => {
-      if (active) setSceneComp(() => mod.CityScene3D)
+  const buildings = useMemo(() => cadastralBlockBuildings, [])
+
+  const selected = buildings.find((b) => b.id === selectedId) ?? null
+
+  const stats = useMemo(() => {
+    const counts = { verified: 0, pending: 0, conflict: 0, new: 0 }
+    buildings.forEach((b) => {
+      counts[b.status] += 1
     })
-    return () => {
-      active = false
-    }
-  }, [])
+    const total = buildings.length
+    const percent = (n: number) => (total > 0 ? Math.round((n / total) * 100) : 0)
+    return [
+      { key: 'verified', value: counts.verified, percent: percent(counts.verified) },
+      { key: 'pending', value: counts.pending, percent: percent(counts.pending) },
+      { key: 'conflict', value: counts.conflict, percent: percent(counts.conflict) },
+      { key: 'new', value: counts.new, percent: percent(counts.new) },
+    ] as const
+  }, [buildings])
 
-  const handleSelect = (id: string | null) => {
-    if (id === null) {
-      setSelectedId(null)
-    } else {
-      setSelectedId((current) => (current === id ? null : id))
-    }
+    const openMap = () => {
+    navigate(selected ? `/map?locate=${encodeURIComponent(selected.ulpin)}` : '/map')
   }
-
-  const handleMeasure = (building: MapBuilding) => {
-    toast.info('Height measurement', `${building.name}: ${building.height} m`)
-  }
-
-  const sceneRef = useRef<CitySceneHandle | null>(null)
-
-  const getScene = () => sceneRef.current
 
   return (
     <Card
@@ -89,8 +64,8 @@ export function CityOverview() {
       className="overflow-hidden"
       action={
         <button
-          onClick={() => navigate('/map')}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-medium text-white shadow-glow-sm transition-all hover:bg-primary-400"
+          onClick={openMap}
+          className="inline-flex items-center gap-2 rounded-lg bg-primary-500 px-3 py-1.5 text-xs font-medium text-white shadow-glow-sm transition-all hover:bg-primary-600"
         >
           <MapIcon size={14} />
           Open 3D Map
@@ -98,88 +73,84 @@ export function CityOverview() {
       }
     >
       <div className="bg-grid relative">
-        <div className="absolute left-4 top-4 z-10 flex flex-col gap-1.5 rounded-xl border border-white/[0.08] bg-navy-900/85 p-1.5 backdrop-blur-md" style={{ width: 132 }}>
-          <p className="px-2 pt-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-            Legend
-          </p>
-          <div className="space-y-1">
-            {Object.entries(badgeFor).map(([key, value]) => (
-              <div key={key} className="flex items-center gap-2 px-2 py-0.5">
-                <Square size={11} style={{ color: value.hex, fill: value.hex, opacity: 0.85 }} />
-                <span className="text-xs text-slate-300">{value.label}</span>
-              </div>
-            ))}
+        {/* Legend — top-left */}
+        <div className="absolute left-4 top-4 z-10">
+          <div className="rounded-xl border border-slate-200 bg-white/90 p-2 shadow-card backdrop-blur-md">
+            <p className="px-2 pb-1 pt-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+              Legend
+            </p>
+            <div className="space-y-0.5">
+              {badgeFor.map((item) => (
+                <div key={item.key} className="flex items-center gap-2 px-2 py-0.5">
+                  <Square size={11} style={{ color: item.hex, fill: item.hex, opacity: 0.85 }} />
+                  <span className="text-xs text-slate-600">{item.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2 rounded-xl border border-white/[0.08] bg-navy-900/85 p-1.5 backdrop-blur-md">
-          <div className="flex items-center gap-1">
-            <ControlButton
-              label="Home"
-              onClick={() => {
-                getScene()?.reset()
-                setMeasureMode(false)
-              }}
-            >
+        {/* Camera controls — bottom center */}
+        <div className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2">
+          <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white/90 p-1 shadow-card backdrop-blur-md">
+            <ControlButton label="Home" onClick={() => sceneRef.current?.home()}>
               <Home size={15} />
             </ControlButton>
-            <ControlButton label="Settings" onClick={() => setShowLabels((s) => !s)}>
-              <Settings2 size={15} />
-            </ControlButton>
-            <ControlButton label="Zoom in" onClick={() => getScene()?.zoomIn()}>
+            <ControlButton label="Zoom in" onClick={() => sceneRef.current?.zoomIn()}>
               <ZoomIn size={15} />
             </ControlButton>
-            <ControlButton label="Zoom out" onClick={() => getScene()?.zoomOut()}>
+            <ControlButton label="Zoom out" onClick={() => sceneRef.current?.zoomOut()}>
               <ZoomOut size={15} />
             </ControlButton>
-            <ControlButton
-              label="Measure"
-              active={measureMode}
-              onClick={() => {
-                setMeasureMode((m) => !m)
-                toast.info('Measure mode', measureMode ? 'Measure disabled' : 'Click a building to measure height')
-              }}
-            >
-              <Locate size={15} />
-            </ControlButton>
-            <ControlButton
-              label="Layers"
-              onClick={() => toast.info('Layers', '10 spatial layers available in the 3D Cadastral Map')}
-            >
-              <Layers size={15} />
+            <ControlButton label="Rotate view" onClick={() => sceneRef.current?.rotate()}>
+              <RotateCw size={15} />
             </ControlButton>
           </div>
         </div>
 
-        <div className="relative w-full overflow-hidden" style={{ height: 520 }}>
-          {SceneComp ? (
-            <SceneComp
-              ref={(node) => {
-                sceneRef.current = node
-              }}
-              buildings={buildings}
-              selectedId={selectedId}
-              showLabels={showLabels}
-              measureMode={measureMode}
-              onSelect={handleSelect}
-              onMeasure={handleMeasure}
-            />
-          ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-3">
-              <span className="h-8 w-8 animate-spin rounded-full border-2 border-primary-400/30 border-t-primary-400" />
-              <p className="text-xs uppercase tracking-wider text-slate-500">
-                Loading 3D scene…
-              </p>
-            </div>
-          )}
+        {/* Caption — top-right, does not cover geometry */}
+        <div className="absolute right-4 top-4 z-10 hidden sm:block">
+          <span className="rounded-lg border border-slate-200 bg-white/90 px-2.5 py-1.5 text-[10px] font-medium text-slate-500 shadow-card backdrop-blur-md">
+            2D Parcel → Building → Floors → 3D Property Volume → 3D ULPIN
+          </span>
         </div>
+
+        <CadastralScene
+          ref={sceneRef}
+          mode="overview"
+          buildings={buildings}
+          underground={cadastralBlockUnderground}
+          undergroundMode="combined"
+          selectedId={selectedId}
+          onSelect={onSelect}
+          className="h-[480px] w-full sm:h-[520px]"
+        />
       </div>
 
-      <div className="grid grid-cols-2 divide-white/[0.06] border-t border-white/[0.06] bg-navy-950/40 sm:grid-cols-4 sm:divide-x">
-        <SummaryStat icon={<CheckCircle2 size={14} className="mb-0.5 text-emerald-400" />} label="Verified" value={statusSummary.verified.toLocaleString('en-IN')} percent={statusSummary.verifiedPercent} tone="text-emerald-400" />
-        <SummaryStat icon={<Eye size={14} className="mb-0.5 text-amber-400" />} label="Pending" value={statusSummary.pending.toLocaleString('en-IN')} percent={statusSummary.pendingPercent} tone="text-amber-400" />
-        <SummaryStat icon={<Square size={14} className="mb-0.5 text-red-400" />} label="Conflict" value={String(statusSummary.conflict)} percent={statusSummary.conflictPercent} tone="text-red-400" />
-        <SummaryStat icon={<Boxes size={14} className="mb-0.5 text-sky-400" />} label="New" value={statusSummary.new.toLocaleString('en-IN')} percent={statusSummary.newPercent} tone="text-sky-400" />
+      <div className="grid grid-cols-2 divide-slate-200 border-t border-slate-200 bg-navy-950/40 sm:grid-cols-4 sm:divide-x">
+        {stats.map((stat) => {
+          const meta = badgeFor.find((b) => b.key === stat.key)!
+          return (
+            <SummaryStat
+              key={stat.key}
+              icon={
+                stat.key === 'verified' ? (
+                  <CheckCircle2 size={14} className="mb-0.5 text-emerald-600" />
+                ) : stat.key === 'pending' ? (
+                  <Eye size={14} className="mb-0.5 text-amber-600" />
+                ) : stat.key === 'conflict' ? (
+                  <Square size={14} className="mb-0.5 text-red-600" />
+                ) : (
+                  <Boxes size={14} className="mb-0.5 text-sky-600" />
+                )
+              }
+              label={meta.label}
+              value={String(stat.value)}
+              percent={stat.percent}
+              tone={meta.tone}
+            />
+          )
+        })}
       </div>
     </Card>
   )
@@ -189,12 +160,10 @@ function ControlButton({
   children,
   label,
   onClick,
-  active = false,
 }: {
-  children: ReactNode
+  children: React.ReactNode
   label: string
   onClick: () => void
-  active?: boolean
 }) {
   return (
     <button
@@ -203,11 +172,7 @@ function ControlButton({
         onClick()
       }}
       title={label}
-      aria-label={label}
-      className={cn(
-        'rounded-lg p-2 text-slate-400 transition-all hover:bg-white/[0.06] hover:text-white',
-        active && 'bg-primary-500/15 text-primary-300',
-      )}
+      className="rounded-lg p-2 text-slate-500 transition-all hover:bg-slate-200/60 hover:text-slate-900"
     >
       {children}
     </button>
@@ -221,7 +186,7 @@ function SummaryStat({
   percent,
   tone,
 }: {
-  icon: ReactNode
+  icon: React.ReactNode
   label: string
   value: string
   percent: number
@@ -231,10 +196,10 @@ function SummaryStat({
     <div className="flex flex-col px-4 py-3.5">
       <div className="flex items-center gap-1">
         {icon}
-        <span className="text-[11px] font-medium text-slate-400">{label}</span>
+        <span className="text-[11px] font-medium text-slate-500">{label}</span>
       </div>
       <div className="mt-1 flex items-baseline justify-between gap-2">
-        <span className="text-lg font-bold text-white">{value}</span>
+        <span className="text-lg font-bold text-slate-900">{value}</span>
         <span className={cn('text-xs font-semibold', tone)}>{percent}%</span>
       </div>
     </div>

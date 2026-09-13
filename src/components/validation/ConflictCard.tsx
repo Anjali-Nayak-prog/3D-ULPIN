@@ -1,5 +1,6 @@
 import {
   AlertOctagon,
+  Eye,
   GitBranch,
   Landmark,
   MapPinOff,
@@ -27,11 +28,12 @@ const typeIconMap = {
 
 interface ConflictCardProps {
   conflict: Conflict
+  onView: (conflict: Conflict) => void
   onResolve: (id: string) => void
   onIgnore: (id: string) => void
 }
 
-export function ConflictCard({ conflict, onResolve, onIgnore }: ConflictCardProps) {
+export function ConflictCard({ conflict, onView, onResolve, onIgnore }: ConflictCardProps) {
   const severity = CONFLICT_SEVERITY[conflict.severity]
   const status = CONFLICT_STATUS[conflict.status]
   const typeInfo = CONFLICT_TYPES[conflict.type]
@@ -45,7 +47,7 @@ export function ConflictCard({ conflict, onResolve, onIgnore }: ConflictCardProp
           ? 'border-red-500/25'
           : conflict.severity === 'high'
             ? 'border-orange-500/25'
-            : 'border-white/[0.07]',
+            : 'border-slate-200',
         (conflict.status === 'resolved' || conflict.status === 'ignored') && 'opacity-70',
       )}
     >
@@ -60,7 +62,7 @@ export function ConflictCard({ conflict, onResolve, onIgnore }: ConflictCardProp
             <Icon size={18} className={severity.text} />
           </span>
           <div>
-            <p className="text-sm font-semibold text-white">{typeInfo.label}</p>
+            <p className="text-sm font-semibold text-slate-900">{typeInfo.label}</p>
             <div className="mt-1 flex flex-wrap items-center gap-1.5">
               <Badge tone={severityLabelToTone(conflict.severity)}>
                 {severity.label} Severity
@@ -76,17 +78,17 @@ export function ConflictCard({ conflict, onResolve, onIgnore }: ConflictCardProp
           </div>
         </div>
         {conflict.severity === 'critical' && (
-          <AlertOctagon size={16} className="shrink-0 animate-pulse-soft text-red-400" />
+          <AlertOctagon size={16} className="shrink-0 animate-pulse-soft text-red-600" />
         )}
       </div>
 
-      <p className="mt-3 text-xs leading-5 text-slate-400">{conflict.description}</p>
+      <p className="mt-3 text-xs leading-5 text-slate-500">{conflict.description}</p>
 
-      <div className="mt-3 rounded-lg border border-white/[0.05] bg-white/[0.02] px-3 py-2">
+      <div className="mt-3 rounded-lg border border-slate-200 bg-slate-100/50 px-3 py-2">
         <p className="text-[10px] uppercase tracking-wider text-slate-500">Affected properties</p>
         <div className="mt-1 flex flex-wrap gap-1.5">
           {conflict.affectedProperties.map((prop) => (
-            <span key={prop} className="rounded-md border border-white/[0.06] bg-navy-950 px-2 py-0.5 font-mono text-[10px] text-slate-400">
+            <span key={prop} className="rounded-md border border-slate-200 bg-navy-950 px-2 py-0.5 font-mono text-[10px] text-slate-500">
               {prop}
             </span>
           ))}
@@ -94,7 +96,8 @@ export function ConflictCard({ conflict, onResolve, onIgnore }: ConflictCardProp
       </div>
 
       <div className="mt-4 flex items-center gap-2">
-        <Button size="sm" variant="outline">
+        <Button size="sm" variant="outline" onClick={() => onView(conflict)}>
+          <Eye size={13} className="mr-1" />
           View
         </Button>
         <Button

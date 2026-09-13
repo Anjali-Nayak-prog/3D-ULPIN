@@ -42,19 +42,19 @@ export function PropertyTypeStep({ value, onChange }: PropertyTypeStepProps) {
                 'group flex flex-col gap-3 rounded-xl border p-4 text-left transition-all duration-200',
                 active
                   ? 'border-primary-400/50 bg-primary-500/10 shadow-glow-sm'
-                  : 'border-white/[0.07] bg-white/[0.02] hover:border-primary-400/30 hover:bg-white/[0.04]',
+                  : 'border-slate-200 bg-slate-100/50 hover:border-primary-400/30 hover:bg-slate-100',
               )}
             >
               <span
                 className={cn(
                   'flex h-10 w-10 items-center justify-center rounded-lg transition-colors',
-                  active ? 'bg-primary-500/20 text-primary-300' : 'bg-white/[0.04] text-slate-400 group-hover:text-slate-200',
+                  active ? 'bg-primary-500/20 text-primary-600' : 'bg-slate-100 text-slate-500 group-hover:text-slate-700',
                 )}
               >
                 <option.icon size={18} />
               </span>
               <span>
-                <span className={cn('block text-sm font-semibold', active ? 'text-primary-300' : 'text-slate-100')}>
+                <span className={cn('block text-sm font-semibold', active ? 'text-primary-600' : 'text-slate-100')}>
                   {option.label}
                 </span>
                 <span className="mt-0.5 block text-[11px] text-slate-500">{option.description}</span>
@@ -62,7 +62,7 @@ export function PropertyTypeStep({ value, onChange }: PropertyTypeStepProps) {
               <span
                 className={cn(
                   'flex h-4 w-4 items-center justify-center rounded-full border transition-all',
-                  active ? 'border-primary-400 bg-primary-500' : 'border-white/20',
+                  active ? 'border-primary-400 bg-primary-500' : 'border-slate-300',
                 )}
               >
                 {active && <span className="h-1.5 w-1.5 rounded-full bg-white" />}

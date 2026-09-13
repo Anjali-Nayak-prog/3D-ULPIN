@@ -9,13 +9,13 @@ interface SpatialInfoProps {
 
 function InfoRow({ icon: Icon, label, value, mono = false }: { icon: typeof Crosshair; label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5">
+    <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-100/50 px-3 py-2.5">
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-500/10">
-        <Icon size={15} className="text-primary-400" />
+        <Icon size={15} className="text-primary-600" />
       </span>
       <div className="min-w-0">
         <p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p>
-        <p className={`mt-0.5 truncate text-sm font-medium text-slate-200 ${mono ? 'font-mono' : ''}`}>
+        <p className={`mt-0.5 truncate text-sm font-medium text-slate-700 ${mono ? 'font-mono' : ''}`}>
           {value}
         </p>
       </div>
@@ -41,8 +41,8 @@ export function SpatialInfo({ property }: SpatialInfoProps) {
         <InfoRow icon={Box} label="Volume" value={formatVolume(spatial.volume)} />
       </div>
 
-      <div className="mt-3 rounded-lg border border-white/[0.06] px-3 py-2 text-center">
-        <p className="font-mono text-xs text-slate-400">
+      <div className="mt-3 rounded-lg border border-slate-200 px-3 py-2 text-center">
+        <p className="font-mono text-xs text-slate-500">
           {formatCoordinates(spatial.latitude, spatial.longitude)}
         </p>
       </div>

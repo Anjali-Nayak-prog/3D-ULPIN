@@ -14,7 +14,7 @@ export interface LocationStepProps {
 }
 
 const inputClass =
-  'h-10 w-full rounded-lg border border-white/10 bg-navy-950 px-3 text-sm text-slate-200 placeholder-slate-500 outline-none transition-colors focus:border-primary-400/50'
+  'h-10 w-full rounded-lg border border-slate-200 bg-navy-950 px-3 text-sm text-slate-700 placeholder-slate-500 outline-none transition-colors focus:border-primary-400/50'
 const labelClass =
   'mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-slate-500'
 
@@ -95,9 +95,9 @@ export function LocationStep({ value, onChange }: LocationStepProps) {
         </label>
       </div>
 
-      <div className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+      <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-100/50 px-4 py-3">
         <span className={cn('h-2 w-2 rounded-full', value.latitude && value.longitude && value.district ? 'bg-emerald-400' : 'bg-amber-400')} />
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-slate-500">
           {value.latitude && value.longitude
             ? `GNSS location locked at ${value.latitude.toFixed(6)}, ${value.longitude.toFixed(6)}`
             : 'Enter GNSS/CORS coordinates to lock the location'}

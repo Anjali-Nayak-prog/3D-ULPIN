@@ -11,7 +11,7 @@ export interface GeometryStepProps {
 }
 
 const inputClass =
-  'h-10 w-full rounded-lg border border-white/10 bg-navy-950 px-3 text-sm text-slate-200 outline-none transition-colors focus:border-primary-400/50'
+  'h-10 w-full rounded-lg border border-slate-200 bg-navy-950 px-3 text-sm text-slate-700 outline-none transition-colors focus:border-primary-400/50'
 const labelClass =
   'mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-slate-500'
 
@@ -19,9 +19,9 @@ export function GeometryStep({ value, onChange }: GeometryStepProps) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <div className="rounded-xl border border-white/[0.07] bg-navy-950/60 p-4">
-          <p className="mb-3 flex items-center gap-2 text-xs font-semibold text-slate-200">
-            <Circle size={14} className="text-cyan-400" />
+        <div className="rounded-xl border border-slate-200 bg-navy-950/60 p-4">
+          <p className="mb-3 flex items-center gap-2 text-xs font-semibold text-slate-700">
+            <Circle size={14} className="text-cyan-600" />
             2D Footprint
           </p>
           <svg viewBox="0 0 200 140" className="mx-auto h-36 w-full">
@@ -51,9 +51,9 @@ export function GeometryStep({ value, onChange }: GeometryStepProps) {
           </label>
         </div>
 
-        <div className="rounded-xl border border-white/[0.07] bg-navy-950/60 p-4">
-          <p className="mb-3 flex items-center gap-2 text-xs font-semibold text-slate-200">
-            <Box size={14} className="text-purple-400" />
+        <div className="rounded-xl border border-slate-200 bg-navy-950/60 p-4">
+          <p className="mb-3 flex items-center gap-2 text-xs font-semibold text-slate-700">
+            <Box size={14} className="text-purple-600" />
             3D Volume
           </p>
           <svg viewBox="0 0 200 150" className="mx-auto h-full max-h-40 w-full">
@@ -95,7 +95,7 @@ export function GeometryStep({ value, onChange }: GeometryStepProps) {
       </label>
 
       <div className="flex items-center gap-3 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.06] px-4 py-3">
-        <TrendingUp size={16} className="shrink-0 text-emerald-400" />
+        <TrendingUp size={16} className="shrink-0 text-emerald-600" />
         <p className="text-xs leading-5 text-emerald-200">
           Geometry validation is performed against neighbouring parcels. Vertical overlaps and boundary
           conflicts will be flagged automatically during ULPIN generation.

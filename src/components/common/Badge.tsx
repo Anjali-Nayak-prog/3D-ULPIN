@@ -19,14 +19,14 @@ interface BadgeProps {
 }
 
 const toneClasses: Record<BadgeTone, string> = {
-  green: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
-  amber: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-  red: 'bg-red-500/10 text-red-400 border-red-500/30',
-  blue: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
-  purple: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-  cyan: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
-  slate: 'bg-slate-500/10 text-slate-400 border-slate-500/30',
-  orange: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
+  green: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30',
+  amber: 'bg-amber-500/10 text-amber-600 border-amber-500/30',
+  red: 'bg-red-500/10 text-red-600 border-red-500/30',
+  blue: 'bg-blue-500/10 text-blue-600 border-blue-500/30',
+  purple: 'bg-purple-500/10 text-purple-600 border-purple-500/30',
+  cyan: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/30',
+  slate: 'bg-slate-500/10 text-slate-500 border-slate-500/30',
+  orange: 'bg-orange-500/10 text-orange-600 border-orange-500/30',
 }
 
 const dotClasses: Record<BadgeTone, string> = {

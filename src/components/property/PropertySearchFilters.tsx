@@ -31,11 +31,11 @@ export function PropertySearchFilters({ filters, onChange, }: PropertySearchFilt
     })
   }
 
-  const selectClass = 'h-9 rounded-lg border border-white/10 bg-navy-900 px-2.5 text-xs text-slate-200 outline-none transition-colors focus:border-primary-400/50'
-  const inputClass = 'h-9 rounded-lg border border-white/10 bg-navy-900 px-3 text-xs text-slate-200 placeholder-slate-500 outline-none transition-colors focus:border-primary-400/50 [color-scheme:dark]'
+  const selectClass = 'h-9 rounded-lg border border-slate-200 bg-navy-900 px-2.5 text-xs text-slate-700 outline-none transition-colors focus:border-primary-400/50'
+  const inputClass = 'h-9 rounded-lg border border-slate-200 bg-navy-900 px-3 text-xs text-slate-700 placeholder-slate-500 outline-none transition-colors focus:border-primary-400/50 [color-scheme:light]'
 
   return (
-    <form onSubmit={submit} className="rounded-xl border border-white/[0.07] bg-navy-900/80 p-4">
+    <form onSubmit={submit} className="rounded-xl border border-slate-200 bg-navy-900/80 p-4">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="relative flex-1">
           <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -43,7 +43,7 @@ export function PropertySearchFilters({ filters, onChange, }: PropertySearchFilt
             value={filters.query}
             onChange={(e) => update({ query: e.target.value })}
             placeholder="Search by ULPIN, Owner, Property ID, Survey Number, Apartment No., Coordinates..."
-            className="h-10 w-full rounded-lg border border-white/10 bg-navy-950 pl-9 pr-4 text-sm text-slate-200 placeholder-slate-500 outline-none transition-all focus:border-primary-400/50"
+            className="h-10 w-full rounded-lg border border-slate-200 bg-navy-950 pl-9 pr-4 text-sm text-slate-700 placeholder-slate-500 outline-none transition-all focus:border-primary-400/50"
           />
         </div>
 
@@ -54,8 +54,8 @@ export function PropertySearchFilters({ filters, onChange, }: PropertySearchFilt
             className={cn(
               'flex h-10 items-center gap-2 rounded-lg border px-3.5 text-xs font-medium transition-colors',
               expanded
-                ? 'border-primary-400/40 bg-primary-500/10 text-primary-300'
-                : 'border-white/10 text-slate-400 hover:text-white',
+                ? 'border-primary-400/40 bg-primary-500/10 text-primary-600'
+                : 'border-slate-200 text-slate-500 hover:text-slate-900',
             )}
           >
             <SlidersHorizontal size={14} />
@@ -70,7 +70,7 @@ export function PropertySearchFilters({ filters, onChange, }: PropertySearchFilt
             <button
               type="button"
               onClick={clearAll}
-              className="flex h-10 items-center gap-1.5 rounded-lg border border-white/10 px-3 text-xs text-slate-500 transition-colors hover:text-white"
+              className="flex h-10 items-center gap-1.5 rounded-lg border border-slate-200 px-3 text-xs text-slate-500 transition-colors hover:text-slate-900"
             >
               <X size={13} />
               Clear
@@ -80,7 +80,7 @@ export function PropertySearchFilters({ filters, onChange, }: PropertySearchFilt
       </div>
 
       {expanded && (
-        <div className="mt-4 grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-4 animate-fade-in md:grid-cols-3 xl:grid-cols-6">
+        <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-200 pt-4 animate-fade-in md:grid-cols-3 xl:grid-cols-6">
           <label className="block">
             <span className="mb-1 block text-[10px] font-medium uppercase tracking-wider text-slate-500">Property Type</span>
             <select

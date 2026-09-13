@@ -31,7 +31,7 @@ export function Card({
   return (
     <div
       className={cn(
-        'rounded-xl border border-white/[0.06] bg-navy-900/70 backdrop-blur-sm shadow-card transition-all duration-300',
+        'rounded-xl border border-slate-200 bg-navy-900/70 backdrop-blur-sm shadow-card transition-all duration-300',
         hoverable &&
           'hover:border-primary-500/30 hover:shadow-glow-sm hover:-translate-y-0.5',
         className,
@@ -42,9 +42,9 @@ export function Card({
         <div className="flex items-center justify-between gap-3 px-5 pt-5 pb-3">
           <div className="min-w-0">
             {title && (
-              <h3 className="text-sm font-semibold tracking-wide text-white">{title}</h3>
+              <h3 className="text-sm font-semibold tracking-wide text-slate-900">{title}</h3>
             )}
-            {subtitle && <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>}
+            {subtitle && <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>}
           </div>
           {action && <div className="shrink-0">{action}</div>}
         </div>

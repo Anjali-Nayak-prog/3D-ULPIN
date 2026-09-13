@@ -9,7 +9,7 @@ export const STATUS_LABELS = {
 
 export const STATUS_COLORS = {
   verified: {
-    text: 'text-emerald-400',
+    text: 'text-emerald-600',
     bg: 'bg-emerald-500/10',
     border: 'border-emerald-500/30',
     dot: 'bg-emerald-400',
@@ -17,7 +17,7 @@ export const STATUS_COLORS = {
     solid: 'bg-emerald-500',
   },
   pending: {
-    text: 'text-amber-400',
+    text: 'text-amber-600',
     bg: 'bg-amber-500/10',
     border: 'border-amber-500/30',
     dot: 'bg-amber-400',
@@ -25,7 +25,7 @@ export const STATUS_COLORS = {
     solid: 'bg-amber-500',
   },
   conflict: {
-    text: 'text-red-400',
+    text: 'text-red-600',
     bg: 'bg-red-500/10',
     border: 'border-red-500/30',
     dot: 'bg-red-400',
@@ -33,7 +33,7 @@ export const STATUS_COLORS = {
     solid: 'bg-red-500',
   },
   new: {
-    text: 'text-sky-400',
+    text: 'text-sky-600',
     bg: 'bg-sky-500/10',
     border: 'border-sky-500/30',
     dot: 'bg-sky-400',
@@ -82,28 +82,28 @@ export const CONFLICT_SEVERITY: Record<
 > = {
   critical: {
     label: 'Critical',
-    text: 'text-red-400',
+    text: 'text-red-600',
     bg: 'bg-red-500/10',
     border: 'border-red-500/30',
     hex: '#ef4444',
   },
   high: {
     label: 'High',
-    text: 'text-orange-400',
+    text: 'text-orange-600',
     bg: 'bg-orange-500/10',
     border: 'border-orange-500/30',
     hex: '#f97316',
   },
   medium: {
     label: 'Medium',
-    text: 'text-amber-400',
+    text: 'text-amber-600',
     bg: 'bg-amber-500/10',
     border: 'border-amber-500/30',
     hex: '#f59e0b',
   },
   low: {
     label: 'Low',
-    text: 'text-sky-400',
+    text: 'text-sky-600',
     bg: 'bg-sky-500/10',
     border: 'border-sky-500/30',
     hex: '#38bdf8',
@@ -116,28 +116,28 @@ export const CONFLICT_STATUS: Record<
 > = {
   open: {
     label: 'Open',
-    text: 'text-red-400',
+    text: 'text-red-600',
     bg: 'bg-red-500/10',
     border: 'border-red-500/30',
     dot: 'bg-red-400',
   },
   'in-progress': {
     label: 'In Progress',
-    text: 'text-amber-400',
+    text: 'text-amber-600',
     bg: 'bg-amber-500/10',
     border: 'border-amber-500/30',
     dot: 'bg-amber-400',
   },
   resolved: {
     label: 'Resolved',
-    text: 'text-emerald-400',
+    text: 'text-emerald-600',
     bg: 'bg-emerald-500/10',
     border: 'border-emerald-500/30',
     dot: 'bg-emerald-400',
   },
   ignored: {
     label: 'Ignored',
-    text: 'text-slate-400',
+    text: 'text-slate-500',
     bg: 'bg-slate-500/10',
     border: 'border-slate-500/30',
     dot: 'bg-slate-400',
@@ -186,6 +186,6 @@ export const CHART_COLORS = {
   slate: '#64748b',
 }
 
-export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
+export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? '/api'
 
-export const DEMO_MODE: boolean = import.meta.env.VITE_DEMO_MODE === 'true'
+export const DEMO_MODE = true
