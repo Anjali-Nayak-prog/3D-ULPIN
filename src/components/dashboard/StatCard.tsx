@@ -22,12 +22,12 @@ const iconMap: Record<StatCardData['icon'], LucideIcon> = {
 }
 
 const colorMap: Record<StatCardData['color'], { bg: string; icon: string; glow: string }> = {
-  blue: { bg: 'bg-blue-500/10', icon: 'text-blue-400', glow: 'group-hover:shadow-[0_0_24px_rgba(59,130,246,0.25)]' },
-  purple: { bg: 'bg-purple-500/10', icon: 'text-purple-400', glow: 'group-hover:shadow-[0_0_24px_rgba(168,85,247,0.25)]' },
-  cyan: { bg: 'bg-cyan-500/10', icon: 'text-cyan-400', glow: 'group-hover:shadow-[0_0_24px_rgba(34,211,238,0.25)]' },
-  green: { bg: 'bg-emerald-500/10', icon: 'text-emerald-400', glow: 'group-hover:shadow-[0_0_24px_rgba(16,185,129,0.25)]' },
-  amber: { bg: 'bg-amber-500/10', icon: 'text-amber-400', glow: 'group-hover:shadow-[0_0_24px_rgba(245,158,11,0.25)]' },
-  red: { bg: 'bg-red-500/10', icon: 'text-red-400', glow: 'group-hover:shadow-[0_0_24px_rgba(239,68,68,0.25)]' },
+  blue: { bg: 'bg-blue-500/10', icon: 'text-blue-600', glow: 'group-hover:shadow-[0_0_24px_rgba(59,130,246,0.25)]' },
+  purple: { bg: 'bg-purple-500/10', icon: 'text-purple-600', glow: 'group-hover:shadow-[0_0_24px_rgba(168,85,247,0.25)]' },
+  cyan: { bg: 'bg-cyan-500/10', icon: 'text-cyan-600', glow: 'group-hover:shadow-[0_0_24px_rgba(34,211,238,0.25)]' },
+  green: { bg: 'bg-emerald-500/10', icon: 'text-emerald-600', glow: 'group-hover:shadow-[0_0_24px_rgba(16,185,129,0.25)]' },
+  amber: { bg: 'bg-amber-500/10', icon: 'text-amber-600', glow: 'group-hover:shadow-[0_0_24px_rgba(245,158,11,0.25)]' },
+  red: { bg: 'bg-red-500/10', icon: 'text-red-600', glow: 'group-hover:shadow-[0_0_24px_rgba(239,68,68,0.25)]' },
 }
 
 interface StatCardProps {
@@ -43,7 +43,7 @@ export function StatCard({ stat, index = 0 }: StatCardProps) {
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-xl border border-white/[0.06] bg-navy-900/70 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-white/[0.12]',
+        'group relative overflow-hidden rounded-xl border border-slate-200 bg-navy-900/70 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300',
         colors.glow,
         'animate-slide-up',
       )}
@@ -56,7 +56,7 @@ export function StatCard({ stat, index = 0 }: StatCardProps) {
         <span
           className={cn(
             'flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium',
-            positive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400',
+            positive ? 'bg-emerald-500/10 text-emerald-600' : 'bg-red-500/10 text-red-600',
           )}
         >
           {positive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -68,7 +68,7 @@ export function StatCard({ stat, index = 0 }: StatCardProps) {
         <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
           {stat.title}
         </p>
-        <p className="mt-1 text-2xl font-bold text-white">{stat.value}</p>
+        <p className="mt-1 text-2xl font-bold text-slate-900">{stat.value}</p>
       </div>
     </div>
   )

@@ -57,13 +57,13 @@ export function DataProvenance({ property }: DataProvenanceProps) {
           return (
             <div
               key={source.id}
-              className="flex items-center gap-3 rounded-lg border border-white/[0.06] px-3 py-2.5 transition-colors hover:bg-white/[0.02]"
+              className="flex items-center gap-3 rounded-lg border border-slate-200 px-3 py-2.5 transition-colors hover:bg-slate-100/50"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.04]">
-                <Icon size={15} className="text-slate-400" />
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100">
+                <Icon size={15} className="text-slate-500" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium text-slate-200">
+                <p className="text-xs font-medium text-slate-700">
                   {sourceLabelMap[source.type]}
                 </p>
                 <p className="mt-0.5 truncate text-[11px] text-slate-500">{source.provider}</p>

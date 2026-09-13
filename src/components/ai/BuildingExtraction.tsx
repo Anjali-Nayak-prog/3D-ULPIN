@@ -16,7 +16,7 @@ export function BuildingExtraction() {
       subtitle="AI rooftop detection from drone orthomosaic"
       className="h-full"
     >
-      <div className="relative overflow-hidden rounded-xl border border-white/[0.07] bg-navy-950/70">
+      <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-navy-950/70">
         <svg viewBox="0 0 100 90" className="h-52 w-full">
           <defs>
             <pattern id="grid-bx" width="6" height="6" patternUnits="userSpaceOnUse">
@@ -49,21 +49,21 @@ export function BuildingExtraction() {
             </g>
           ))}
         </svg>
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy-950/60 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-navy-950/60" />
       </div>
 
       <div className="mt-4 space-y-3">
         <div>
           <div className="mb-1 flex justify-between text-[11px]">
-            <span className="text-slate-400">Mean detection confidence</span>
-            <span className="font-semibold text-purple-300">94.2%</span>
+            <span className="text-slate-500">Mean detection confidence</span>
+            <span className="font-semibold text-purple-600">94.2%</span>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.05]">
-            <div className="h-full w-[94.2%] rounded-full bg-gradient-to-r from-purple-600 to-purple-400" />
+          <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="h-full w-[94.2%] rounded-full bg-purple-500" />
           </div>
         </div>
-        <div className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2.5 text-[11px] text-slate-400">
-          <ScanSearch size={14} className="shrink-0 text-purple-400" />
+        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-100/50 px-3 py-2.5 text-[11px] text-slate-500">
+          <ScanSearch size={14} className="shrink-0 text-purple-600" />
           Extracted {detections.length} buildings from 1,240 ortho tiles · min confidence threshold 85%
         </div>
       </div>

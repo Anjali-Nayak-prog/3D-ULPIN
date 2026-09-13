@@ -29,13 +29,9 @@ export function MainLayout() {
           <Outlet />
         </main>
 
-        <footer className="border-t border-white/[0.06] px-4 py-4 lg:px-6">
-          <div className="flex flex-col items-center justify-between gap-2 text-[11px] text-slate-600 sm:flex-row">
-            <p>
-              3D ULPIN · Vertical Property Mapping System · Pune Municipal
-              Corporation
-            </p>
-            <p>v1.0.0 — Demo build 2026</p>
+        <footer className="border-t border-slate-200 px-4 py-4 lg:px-6">
+          <div className="flex items-center justify-center text-[11px] text-slate-600">
+            <p>3D ULPIN · Vertical Property Mapping System — Demo Prototype · v1.0.0</p>
           </div>
         </footer>
       </div>

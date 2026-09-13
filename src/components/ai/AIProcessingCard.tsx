@@ -18,16 +18,16 @@ const stats: AIStat[] = [
 
 export function AIProcessingCard() {
   return (
-    <div className="rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-500/[0.07] to-transparent p-6">
+    <div className="rounded-xl border border-purple-500/20 bg-purple-500/[0.05] p-6">
       <div className="mb-5 flex items-center gap-3">
         <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-500/15">
-          <BrainCircuit size={22} className="text-purple-400" />
+          <BrainCircuit size={22} className="text-purple-600" />
         </span>
         <div>
-          <h3 className="text-base font-bold text-white">AI Model Pipeline</h3>
-          <p className="text-xs text-slate-400">Vision + geometry models · v2.4.1</p>
+          <h3 className="text-base font-bold text-slate-900">AI Model Pipeline</h3>
+          <p className="text-xs text-slate-500">Vision + geometry models · v2.4.1</p>
         </div>
-        <span className="ml-auto flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-[11px] font-medium text-purple-300">
+        <span className="ml-auto flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-[11px] font-medium text-purple-600">
           <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse-soft" />
           Model active
         </span>
@@ -37,17 +37,17 @@ export function AIProcessingCard() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="group flex items-start gap-3 rounded-xl border border-white/[0.06] bg-navy-900/70 p-4 transition-all duration-200 hover:border-purple-400/30 hover:shadow-glow-sm"
+            className="group flex items-start gap-3 rounded-xl border border-slate-200 bg-navy-900/70 p-4 transition-all duration-200 hover:border-purple-400/30 hover:shadow-glow-sm"
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
-              <stat.icon size={16} className="text-purple-400" />
+              <stat.icon size={16} className="text-purple-600" />
             </span>
             <div className="min-w-0">
               <p className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
                 {stat.label}
               </p>
-              <p className="mt-0.5 text-xl font-bold text-white">{stat.value}</p>
-              <p className={cn('mt-0.5 text-[11px]', stat.trend === 'up' ? 'text-emerald-400' : 'text-slate-500')}>
+              <p className="mt-0.5 text-xl font-bold text-slate-900">{stat.value}</p>
+              <p className={cn('mt-0.5 text-[11px]', stat.trend === 'up' ? 'text-emerald-600' : 'text-slate-500')}>
                 {stat.delta}
               </p>
             </div>

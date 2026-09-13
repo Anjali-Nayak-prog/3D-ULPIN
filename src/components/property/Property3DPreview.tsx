@@ -51,15 +51,15 @@ export function Property3DPreview({ property }: Property3DPreviewProps) {
       </svg>
 
       <div className="absolute left-3 top-3 flex flex-col gap-1">
-        <span className="rounded-md border border-white/[0.07] bg-navy-900/80 px-2 py-1 text-[10px] text-slate-300">
+        <span className="rounded-md border border-slate-200 bg-navy-900/80 px-2 py-1 text-[10px] text-slate-600">
           {property.building?.floors ?? 1} floors
         </span>
-        <span className="rounded-md border border-white/[0.07] bg-navy-900/80 px-2 py-1 text-[10px] text-slate-300">
+        <span className="rounded-md border border-slate-200 bg-navy-900/80 px-2 py-1 text-[10px] text-slate-600">
           {property.building?.height
             ? `${property.building.height} m`
             : `${(property.spatial.maxHeight - property.spatial.minHeight).toFixed(0)} m height`}
         </span>
-        <span className="rounded-md border border-white/[0.07] bg-navy-900/80 px-2 py-1 text-[10px] text-slate-300">
+        <span className="rounded-md border border-slate-200 bg-navy-900/80 px-2 py-1 text-[10px] text-slate-600">
           {property.spatial.volume.toLocaleString('en-IN')} m³
         </span>
       </div>

@@ -44,19 +44,19 @@ export function ProcessingTimeline() {
       subtitle="End-to-end AI + geometry workflow"
     >
       <div className="relative">
-        <div className="absolute bottom-4 left-[19px] top-4 w-px bg-gradient-to-b from-emerald-500/40 via-purple-500/40 to-white/10" />
+        <div className="absolute bottom-4 left-[19px] top-4 w-px bg-slate-300" />
         <ol className="space-y-1">
           {pipeline.map((stage, index) => (
             <li
               key={stage.id}
-              className="relative flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-white/[0.02]"
+              className="relative flex items-start gap-3 rounded-xl p-2 transition-colors hover:bg-slate-100/50"
             >
               <span
                 className={cn(
                   'z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border transition-colors',
-                  stage.status === 'completed' && 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400',
-                  stage.status === 'running' && 'border-purple-500/40 bg-purple-500/10 text-purple-300 shadow-glow-sm',
-                  stage.status === 'pending' && 'border-white/[0.08] bg-white/[0.03] text-slate-500',
+                  stage.status === 'completed' && 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600',
+                  stage.status === 'running' && 'border-purple-500/40 bg-purple-500/10 text-purple-600 shadow-glow-sm',
+                  stage.status === 'pending' && 'border-slate-200 bg-slate-100/70 text-slate-500',
                 )}
               >
                 {stage.status === 'completed' ? (
@@ -69,14 +69,14 @@ export function ProcessingTimeline() {
               </span>
               <div className="min-w-0 flex-1 pt-0.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-semibold text-slate-200">
+                  <span className="text-xs font-semibold text-slate-700">
                     {index + 1}. {stage.label}
                   </span>
                   <span
                     className={cn(
                       'text-[10px] font-medium',
-                      stage.status === 'completed' && 'text-emerald-400',
-                      stage.status === 'running' && 'text-purple-300',
+                      stage.status === 'completed' && 'text-emerald-600',
+                      stage.status === 'running' && 'text-purple-600',
                       stage.status === 'pending' && 'text-slate-600',
                     )}
                   >
@@ -87,9 +87,9 @@ export function ProcessingTimeline() {
                 <p className="mt-0.5 font-mono text-[11px] text-slate-600">{stage.detail}</p>
 
                 {stage.status === 'running' && stage.progress !== undefined && (
-                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/[0.05]">
+                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-700"
+                      className="h-full rounded-full bg-purple-500 transition-all duration-700"
                       style={{ width: `${stage.progress}%` }}
                     />
                   </div>

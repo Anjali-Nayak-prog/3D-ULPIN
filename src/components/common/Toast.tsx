@@ -29,19 +29,19 @@ const ToastContext = createContext<ToastContextValue | null>(null)
 
 const toastStyles: Record<ToastType, { icon: ReactNode; ring: string }> = {
   success: {
-    icon: <CheckCircle2 size={18} className="text-emerald-400" />,
+    icon: <CheckCircle2 size={18} className="text-emerald-600" />,
     ring: 'border-emerald-500/30',
   },
   error: {
-    icon: <AlertTriangle size={18} className="text-red-400" />,
+    icon: <AlertTriangle size={18} className="text-red-600" />,
     ring: 'border-red-500/30',
   },
   warning: {
-    icon: <AlertTriangle size={18} className="text-amber-400" />,
+    icon: <AlertTriangle size={18} className="text-amber-600" />,
     ring: 'border-amber-500/30',
   },
   info: {
-    icon: <Info size={18} className="text-sky-400" />,
+    icon: <Info size={18} className="text-sky-600" />,
     ring: 'border-sky-500/30',
   },
 }
@@ -89,16 +89,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             >
               <div className="mt-0.5 shrink-0">{style.icon}</div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-white">{t.title}</p>
+                <p className="text-sm font-medium text-slate-900">{t.title}</p>
                 {t.description && (
-                  <p className="mt-0.5 text-xs leading-4 text-slate-400">
+                  <p className="mt-0.5 text-xs leading-4 text-slate-500">
                     {t.description}
                   </p>
                 )}
               </div>
               <button
                 onClick={() => dismiss(t.id)}
-                className="shrink-0 rounded p-0.5 text-slate-500 transition-colors hover:text-white"
+                className="shrink-0 rounded p-0.5 text-slate-500 transition-colors hover:text-slate-900"
                 aria-label="Dismiss"
               >
                 <X size={14} />

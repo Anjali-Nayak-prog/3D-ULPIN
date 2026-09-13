@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Loader2, Sparkles } from 'lucide-react'
 import type { PropertyType } from '../../types/property'
 import type { ULPINResult } from '../../types/ulpin'
 import { generateULPIN } from '../../services/ulpinService'
@@ -27,7 +27,15 @@ export function ULPINForm() {
 
   const [step, setStep] = useState(0)
   const [generating, setGenerating] = useState(false)
+  const [processingStep, setProcessingStep] = useState<number | null>(null)
   const [result, setResult] = useState<ULPINResult | null>(null)
+
+  const processingMessages = [
+    'Validating spatial geometry…',
+    'Resolving parcel relationships…',
+    'Encoding vertical position…',
+    'Generating unique 3D identifier…',
+  ]
 
   const [location, setLocation] = useState({
     latitude: 18.52043,
@@ -69,7 +77,12 @@ export function ULPINForm() {
 
   const handleGenerate = async () => {
     setGenerating(true)
+    setProcessingStep(0)
     try {
+      for (let i = 0; i < processingMessages.length; i++) {
+        setProcessingStep(i)
+        await new Promise((resolve) => setTimeout(resolve, 700))
+      }
       const res = await generateULPIN({
         latitude: location.latitude,
         longitude: location.longitude,
@@ -116,7 +129,7 @@ export function ULPINForm() {
               return (
                 <li key={label} className="flex shrink-0 items-center">
                   {index > 0 && (
-                    <span className={cn('mx-2 h-px w-8 sm:w-12', done || active ? 'bg-primary-500/60' : 'bg-white/10')} />
+                    <span className={cn('mx-2 h-px w-8 sm:w-12', done || active ? 'bg-primary-500/60' : 'bg-slate-300')} />
                   )}
                   <button
                     onClick={() => index < step && setStep(index)}
@@ -126,8 +139,8 @@ export function ULPINForm() {
                       className={cn(
                         'flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-bold transition-all duration-200',
                         done && 'border-primary-500 bg-primary-500 text-white',
-                        active && 'border-primary-400 bg-primary-500/20 text-primary-300 shadow-glow-sm',
-                        !done && !active && 'border-white/15 text-slate-500',
+                        active && 'border-primary-400 bg-primary-500/20 text-primary-600 shadow-glow-sm',
+                        !done && !active && 'border-slate-200 text-slate-500',
                       )}
                     >
                       {done ? <Check size={13} /> : index + 1}
@@ -135,7 +148,7 @@ export function ULPINForm() {
                     <span
                       className={cn(
                         'hidden text-xs font-medium sm:block',
-                        active ? 'text-primary-300' : done ? 'text-slate-300' : 'text-slate-500',
+                        active ? 'text-primary-600' : done ? 'text-slate-600' : 'text-slate-500',
                       )}
                     >
                       {label}
@@ -161,17 +174,50 @@ export function ULPINForm() {
               {step === 3 && <GeometryStep value={geometry} onChange={patchGeometry} />}
               {step === 4 && (
                 <div className="flex flex-col items-center gap-4 py-6 text-center">
-                  <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500/20 to-purple-500/20">
-                    <Sparkles size={30} className="text-primary-400" />
-                  </span>
-                  <div>
-                    <h3 className="text-base font-bold text-white">Ready to Generate</h3>
-                    <p className="mx-auto mt-1 max-w-md text-xs leading-5 text-slate-400">
-                      The system will compute the geometric hash, verify against neighbouring
-                      volumes, and issue a unique 3D ULPIN for
-                      <span className="font-medium text-primary-300"> {location.district}</span>.
-                    </p>
-                  </div>
+                  {!generating ? (
+                    <>
+                      <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-500/15">
+                        <Sparkles size={30} className="text-primary-600" />
+                      </span>
+                      <div>
+                        <h3 className="text-base font-bold text-slate-900">Ready to Generate</h3>
+                        <p className="mx-auto mt-1 max-w-md text-xs leading-5 text-slate-500">
+                          The system will compute the geometric hash, verify against neighbouring
+                          volumes, and issue a unique 3D ULPIN for
+                          <span className="font-medium text-primary-600"> {location.district}</span>.
+                        </p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full max-w-md space-y-3">
+                      <div className="flex items-center justify-center gap-2">
+                        <Loader2 size={18} className="animate-spin text-primary-600" />
+                        <span className="text-sm font-medium text-slate-900">Generating 3D ULPIN…</span>
+                      </div>
+                      {processingMessages.map((msg, i) => {
+                        const done = processingStep !== null && i < processingStep
+                        const active = processingStep === i
+                        return (
+                          <div key={i} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-100/50 px-3.5 py-2.5">
+                            <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold transition-all duration-300 ${
+                              done
+                                ? 'border-emerald-500 bg-emerald-500 text-white'
+                                : active
+                                ? 'border-primary-400 bg-primary-500/20 text-primary-600'
+                                : 'border-slate-200 text-slate-600'
+                            }`}>
+                              {done ? <Check size={12} /> : i + 1}
+                            </span>
+                            <span className={`text-xs transition-colors duration-300 ${
+                              done ? 'text-slate-600' : active ? 'text-primary-600' : 'text-slate-600'
+                            }`}>
+                              {msg}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                   <div className="mt-2 grid w-full max-w-lg grid-cols-2 gap-2 text-left sm:grid-cols-3">
                     <SummaryChip label="Type" value={PROPERTY_TYPE_LABELS[propertyType]} />
                     <SummaryChip label="Height" value={`${extent.height} m`} />
@@ -185,7 +231,7 @@ export function ULPINForm() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-white/[0.06] pt-5">
+          <div className="flex items-center justify-between border-t border-slate-200 pt-5">
             <Button variant="ghost" onClick={back} disabled={step === 0}>
               <ArrowLeft size={15} />
               Back
@@ -212,7 +258,7 @@ export function ULPINForm() {
         >
           <div className="px-5 pb-5">
             <div className="relative mx-auto mt-2 flex h-56 w-44 items-end justify-center">
-              <div className="absolute bottom-0 h-4 w-40 rounded-sm border border-white/10 bg-navy-800" />
+              <div className="absolute bottom-0 h-4 w-40 rounded-sm border border-slate-200 bg-navy-800" />
               {Array.from({ length: Math.min(Math.max(extent.height / 3, 1), 12) }, (_, i) => (
                 <div
                   key={i}
@@ -226,7 +272,7 @@ export function ULPINForm() {
         </Card>
 
         <Card title="Generation Notes">
-          <ul className="space-y-2 text-xs leading-5 text-slate-400">
+          <ul className="space-y-2 text-xs leading-5 text-slate-500">
             <li className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-400" />Geometric hash uses district, coordinates and vertical envelope.</li>
             <li className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" />Neighbour checks run automatically against the volumentric graph.</li>
             <li className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-purple-400" />Conflicts surfaced here block issuance until resolved.</li>
@@ -239,9 +285,9 @@ export function ULPINForm() {
 
 function SummaryChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+    <div className="rounded-lg border border-slate-200 bg-slate-100/50 px-3 py-2">
       <p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p>
-      <p className="mt-0.5 truncate text-xs font-medium text-slate-200">{value}</p>
+      <p className="mt-0.5 truncate text-xs font-medium text-slate-700">{value}</p>
     </div>
   )
 }

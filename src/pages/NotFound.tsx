@@ -11,13 +11,13 @@ const quickLinks = [
 export function NotFound() {
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center gap-5 px-4 text-center">
-      <span className="flex h-20 w-20 items-center justify-center rounded-3xl border border-white/[0.08] bg-navy-900 shadow-card">
-        <FileQuestion size={34} className="text-primary-400" />
+      <span className="flex h-20 w-20 items-center justify-center rounded-3xl border border-slate-200 bg-navy-900 shadow-card">
+        <FileQuestion size={34} className="text-primary-600" />
       </span>
       <div>
         <p className="text-sm font-semibold uppercase tracking-widest text-slate-500">Error 404</p>
-        <h1 className="mt-1 text-3xl font-bold text-white">Page not found</h1>
-        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+        <h1 className="mt-1 text-3xl font-bold text-slate-900">Page not found</h1>
+        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
           The route you requested does not exist in the 3D cadastral system. Verify the address or
           return to a known view.
         </p>

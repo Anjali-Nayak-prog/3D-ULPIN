@@ -24,40 +24,40 @@ export function FloorSegmentation() {
       subtitle="Skyline Tower A · per-floor vertical delineation"
       className="h-full"
       action={
-        <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-400">
+        <span className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600">
           <Check size={12} />
           {okCount}/{floorRows.length} floors clean
         </span>
       }
     >
-      <div className="max-h-72 overflow-y-auto rounded-lg border border-white/[0.06]">
+      <div className="max-h-72 overflow-y-auto rounded-lg border border-slate-200">
         {floorRows.map((row, index) => (
           <div
             key={row.floor}
             className={cn(
-              'flex items-center gap-3 px-3 py-2 text-xs transition-colors hover:bg-white/[0.02]',
-              index !== 0 && 'border-t border-white/[0.04]',
+              'flex items-center gap-3 px-3 py-2 text-xs transition-colors hover:bg-slate-100/50',
+              index !== 0 && 'border-t border-slate-200',
             )}
           >
-            <span className="w-10 shrink-0 font-mono font-medium text-slate-300">{row.floor}</span>
-            <span className="w-24 shrink-0 text-slate-400">{row.type}</span>
+            <span className="w-10 shrink-0 font-mono font-medium text-slate-600">{row.floor}</span>
+            <span className="w-24 shrink-0 text-slate-500">{row.type}</span>
             <span className="hidden flex-1 text-slate-500 sm:block">{row.area}</span>
-            <div className="flex h-1 w-24 shrink-0 overflow-hidden rounded-full bg-white/[0.06] sm:w-32">
+            <div className="flex h-1 w-24 shrink-0 overflow-hidden rounded-full bg-slate-200/60 sm:w-32">
               <div
                 className={cn(
                   'h-full rounded-full',
-                  row.ok ? 'bg-gradient-to-r from-purple-600 to-purple-400' : 'bg-gradient-to-r from-amber-600 to-amber-400',
+                  row.ok ? 'bg-purple-500' : 'bg-amber-500',
                 )}
                 style={{ width: `${row.conf}%` }}
               />
             </div>
-            <span className="w-12 shrink-0 text-right font-mono text-[11px] text-slate-400">
+            <span className="w-12 shrink-0 text-right font-mono text-[11px] text-slate-500">
               {row.conf}%
             </span>
             {row.ok ? (
-              <Check size={13} className="shrink-0 text-emerald-400" />
+              <Check size={13} className="shrink-0 text-emerald-600" />
             ) : (
-              <Minus size={13} className="shrink-0 text-amber-400" />
+              <Minus size={13} className="shrink-0 text-amber-600" />
             )}
           </div>
         ))}

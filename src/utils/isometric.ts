@@ -9,6 +9,10 @@ export interface IsoBox {
   right: string
 }
 
+export interface IsoBoxRange extends IsoBox {
+  topMid: IsoPoint
+}
+
 /**
  * Isometric projection helper for the mock 3D city renderer.
  * Grid coordinate (gx, gz) on the ground plane, gy is elevation (positive = up).
@@ -76,6 +80,39 @@ export function isoBoxGeometry(
     top: [A1, B1, C1, D1].map((p) => `${p.x},${p.y}`).join(' '),
     left: [B1, C1, C, B].map((p) => `${p.x},${p.y}`).join(' '),
     right: [A1, B1, B, A].map((p) => `${p.x},${p.y}`).join(' '),
+  }
+}
+
+/**
+ * Box geometry for a slab between two elevations (e.g. a single floor volume).
+ */
+export function isoBoxRange(
+  gx: number,
+  gz: number,
+  width: number,
+  depth: number,
+  gy0: number,
+  gy1: number,
+  opts?: Parameters<typeof isoProject>[3],
+): IsoBoxRange {
+  const t = opts?.tile ?? 34
+  const hs = opts?.heightScale ?? 1.1
+  const ox = opts?.originX ?? 0
+  const oy = opts?.originY ?? 0
+
+  const A = isoProject(gx, gz, gy0, { tile: t, heightScale: hs, originX: ox, originY: oy })
+  const B = isoProject(gx + width, gz, gy0, { tile: t, heightScale: hs, originX: ox, originY: oy })
+  const C = isoProject(gx + width, gz + depth, gy0, { tile: t, heightScale: hs, originX: ox, originY: oy })
+  const A1 = isoProject(gx, gz, gy1, { tile: t, heightScale: hs, originX: ox, originY: oy })
+  const B1 = isoProject(gx + width, gz, gy1, { tile: t, heightScale: hs, originX: ox, originY: oy })
+  const C1 = isoProject(gx + width, gz + depth, gy1, { tile: t, heightScale: hs, originX: ox, originY: oy })
+  const D1 = isoProject(gx, gz + depth, gy1, { tile: t, heightScale: hs, originX: ox, originY: oy })
+
+  return {
+    top: [A1, B1, C1, D1].map((p) => `${p.x},${p.y}`).join(' '),
+    left: [B1, C1, C, B].map((p) => `${p.x},${p.y}`).join(' '),
+    right: [A1, B1, B, A].map((p) => `${p.x},${p.y}`).join(' '),
+    topMid: { x: (A1.x + C1.x) / 2, y: (A1.y + C1.y) / 2 },
   }
 }
 

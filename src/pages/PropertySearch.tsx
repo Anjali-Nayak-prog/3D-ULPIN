@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { Building2, ChevronRight, LayoutGrid, List, MapPin } from 'lucide-react'
+import { Building2, LayoutGrid, List, Map as MapIcon, MapPin } from 'lucide-react'
 import { PageHeader } from '../components/layout/PageHeader'
 import { PropertyCard } from '../components/property/PropertyCard'
 import { PropertySearchFilters } from '../components/property/PropertySearchFilters'
@@ -57,7 +57,7 @@ export function PropertySearch() {
         title="Property Search"
         subtitle="Search parcels, buildings, apartments and underground assets across the state"
       >
-        <span className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-navy-900 px-3 py-2 text-xs text-slate-400">
+        <span className="flex items-center gap-2 rounded-xl border border-slate-200 bg-navy-900 px-3 py-2 text-xs text-slate-500">
           {loading ? 'Searching…' : `${properties.length} results`}
         </span>
       </PageHeader>
@@ -73,16 +73,16 @@ export function PropertySearch() {
       )}
 
       <Card padding="none" className="overflow-hidden">
-        <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
           <p className="text-xs text-slate-500">
-            Showing <span className="font-semibold text-slate-300">{properties.length}</span> records
+            Showing <span className="font-semibold text-slate-600">{properties.length}</span> records
             {filters.query && (
               <>
-                {' '}for “<span className="text-primary-300">{filters.query}</span>”
+                {' '}for “<span className="text-primary-600">{filters.query}</span>”
               </>
             )}
           </p>
-          <div className="flex items-center gap-1 rounded-lg border border-white/[0.08] p-1">
+          <div className="flex items-center gap-1 rounded-lg border border-slate-200 p-1">
             <ViewButton active={viewMode === 'grid'} onClick={() => setViewMode('grid')}>
               <LayoutGrid size={14} />
             </ViewButton>
@@ -95,7 +95,7 @@ export function PropertySearch() {
         {loading ? (
           <div className="grid grid-cols-1 gap-3 p-4 md:grid-cols-2 xl:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-44 animate-pulse rounded-xl border border-white/[0.05] bg-white/[0.02]" />
+              <div key={i} className="h-44 animate-pulse rounded-xl border border-slate-200 bg-slate-100/50" />
             ))}
           </div>
         ) : properties.length === 0 ? (
@@ -112,7 +112,7 @@ export function PropertySearch() {
             ))}
           </div>
         ) : (
-          <div className="divide-y divide-white/[0.05]">
+          <div className="divide-y divide-slate-200">
             {properties.map((property) => (
               <ListRow key={property.id} property={property} />
             ))}
@@ -139,30 +139,37 @@ const listStatusLabel: Record<string, string> = {
 
 function ListRow({ property }: { property: Property }) {
   return (
-    <Link
-      to={`/properties/${property.id}`}
-      className="group flex items-center justify-between gap-4 px-4 py-3 transition-colors hover:bg-white/[0.02]"
-    >
-      <div className="flex items-center gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/[0.07] bg-navy-900">
+    <div className="group flex items-center justify-between gap-3 px-4 py-3 transition-colors hover:bg-slate-100/50">
+      <Link
+        to={`/properties/${property.id}`}
+        className="flex min-w-0 flex-1 items-center gap-3"
+      >
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-navy-900">
           {property.type === 'land' || property.type === 'infrastructure' ? (
-            <MapPin size={15} className="text-primary-400" />
+            <MapPin size={15} className="text-primary-600" />
           ) : (
-            <Building2 size={15} className="text-cyan-400" />
+            <Building2 size={15} className="text-cyan-600" />
           )}
         </span>
         <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-slate-200 group-hover:text-white">{property.name}</p>
+          <p className="truncate text-sm font-medium text-slate-700 group-hover:text-slate-900">{property.name}</p>
           <p className="truncate font-mono text-[11px] text-slate-600">{property.ulpin}</p>
         </div>
-      </div>
-      <div className="hidden items-center gap-4 md:flex">
+      </Link>
+      <div className="hidden shrink-0 items-center gap-4 md:flex">
         <span className="w-20 text-xs text-slate-500">{PROPERTY_TYPE_LABELS[property.type]}</span>
         <span className="w-20 text-right text-xs text-slate-500">{formatHeight(property.spatial.maxHeight)}</span>
         <Badge tone={listStatusTone[property.status]}>{listStatusLabel[property.status]}</Badge>
       </div>
-      <ChevronRight size={15} className="shrink-0 text-slate-700 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-400" />
-    </Link>
+      <Link
+        to={`/map?locate=${encodeURIComponent(property.ulpin)}`}
+        title="Open on 3D map"
+        aria-label="Open on 3D map"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/70 text-slate-500 transition-colors hover:border-primary-400/40 hover:bg-primary-500/10 hover:text-primary-600"
+      >
+        <MapIcon size={14} />
+      </Link>
+    </div>
   )
 }
 
@@ -180,7 +187,7 @@ function ViewButton({
       onClick={onClick}
       className={cn(
         'flex h-7 w-7 items-center justify-center rounded-md transition-colors',
-        active ? 'bg-white/[0.08] text-white' : 'text-slate-500 hover:text-slate-300',
+        active ? 'bg-slate-200 text-slate-900' : 'text-slate-500 hover:text-slate-600',
       )}
     >
       {children}
@@ -190,10 +197,10 @@ function ViewButton({
 
 function SummaryPill({ label, count, dot }: { label: string; count: number; dot: string }) {
   return (
-    <span className="flex items-center gap-1.5 rounded-full border border-white/[0.07] bg-navy-900/70 px-3 py-1.5 text-[11px] text-slate-400">
+    <span className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-navy-900/70 px-3 py-1.5 text-[11px] text-slate-500">
       <span className={cn('h-1.5 w-1.5 rounded-full', dot)} />
       {label}
-      <span className="font-mono font-semibold text-slate-200">{count}</span>
+      <span className="font-mono font-semibold text-slate-700">{count}</span>
     </span>
   )
 }

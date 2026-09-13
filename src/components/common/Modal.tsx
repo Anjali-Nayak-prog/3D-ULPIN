@@ -51,19 +51,19 @@ export function Modal({
       />
       <div
         className={cn(
-          'relative w-full rounded-2xl border border-white/[0.08] bg-navy-900 shadow-2xl animate-slide-up',
+          'relative w-full rounded-2xl border border-slate-200 bg-navy-900 shadow-2xl animate-slide-up',
           sizeMap[size],
         )}
       >
         {(title || subtitle) && (
-          <div className="flex items-start justify-between gap-4 border-b border-white/[0.06] px-6 py-4">
+          <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-4">
             <div>
-              {title && <h3 className="text-base font-semibold text-white">{title}</h3>}
-              {subtitle && <p className="mt-0.5 text-xs text-slate-400">{subtitle}</p>}
+              {title && <h3 className="text-base font-semibold text-slate-900">{title}</h3>}
+              {subtitle && <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>}
             </div>
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
+              className="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
               aria-label="Close"
             >
               <X size={18} />
@@ -72,7 +72,7 @@ export function Modal({
         )}
         <div className="max-h-[70vh] overflow-y-auto px-6 py-5">{children}</div>
         {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-white/[0.06] px-6 py-4">
+          <div className="flex items-center justify-end gap-2 border-t border-slate-200 px-6 py-4">
             {footer}
           </div>
         )}
